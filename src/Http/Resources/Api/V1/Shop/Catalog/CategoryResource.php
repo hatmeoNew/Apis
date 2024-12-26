@@ -18,6 +18,8 @@ class CategoryResource extends AdminCategoryResource
         /* assign category */
         $category = $this->category ? $this->category : $this;
 
+        $products = $category->products()->limit(10)->get();
+
         /* generating resource */
         return [
             /* category's information */
@@ -29,7 +31,7 @@ class CategoryResource extends AdminCategoryResource
             'status'             => $category->status,
             'products_count'     => $category->products_count,
             'parent_id'          => $category->parent_id,
-            'products'           => ProductResource::collection($category->products),
+            'products'           => ProductResource::collection($products), // limit 10
             'created_at'         => $category->created_at,
             'updated_at'         => $category->updated_at,
         ];
