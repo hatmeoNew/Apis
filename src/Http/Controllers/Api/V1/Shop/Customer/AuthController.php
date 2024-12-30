@@ -345,6 +345,11 @@ class AuthController extends CustomerController
 
         $customer = $this->customerRepository->create([]);
 
+        // add customer to customer group
+        $customer->customer_group_id = $this->customerGroupRepository->findOneWhere(['code' => 'guest'])->id;
+        $customer->save();
+
+
         return response([
             'token' => $customer->createToken($request->device_name, ['role:customer'])->plainTextToken,
         ]);
