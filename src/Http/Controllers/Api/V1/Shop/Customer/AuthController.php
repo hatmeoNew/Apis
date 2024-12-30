@@ -330,4 +330,24 @@ class AuthController extends CustomerController
             'token'   => $customer->createToken($request->device_name, ['role:customer'])->plainTextToken,
         ]);
     }
+
+    /**
+     * Generate a guest token.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function getGuestToken(Request $request) {
+        // Create a guest customer and return the token.
+
+        $request->validate([
+            'device_name' => 'required',
+        ]);
+
+        $customer = $this->customerRepository->create([]);
+
+        return response([
+            'token' => $customer->createToken($request->device_name, ['role:customer'])->plainTextToken,
+        ]);
+
+    }
 }

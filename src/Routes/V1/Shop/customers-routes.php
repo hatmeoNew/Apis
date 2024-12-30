@@ -26,6 +26,9 @@ Route::controller(AuthController::class)->prefix('customer')->group(function () 
 
     // Login with code
     Route::post('login-code', 'LoginWithCode');
+
+    // Get Guest Token
+    Route::post('guest-token', 'getGuestToken');
 });
 
 /**

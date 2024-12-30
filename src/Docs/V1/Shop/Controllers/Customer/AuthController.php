@@ -350,4 +350,53 @@ class AuthController
     public function getCode(){
 
     }
+
+    /**
+     * @OA\Post(
+     *      path="/api/v1/customer/guest-token",
+     *      operationId="getGuestToken",
+     *      tags={"Customers"},
+     *      summary="Get Guest Token",
+     *      description="Get Guest Token",
+     *
+     *      @OA\RequestBody(
+     *
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *
+     *              @OA\Schema(
+     *
+     *                  @OA\Property(
+     *                      property="device_name",
+     *                      type="string",
+     *                      example="android"
+     *                  ),
+     *                  required={"device_name"}
+     *              )
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *
+     *          @OA\JsonContent(
+     *
+     *              @OA\Property(property="message", type="string", example="Guest Token generated successfully.")
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request",
+     *
+     *          @OA\JsonContent(
+     *
+     *              @OA\Property(property="message", type="string", example="Invalid Request Parameters")
+     *          )
+     *      )
+     * )
+     */
+    public function getGuestToken(){
+    }
 }
