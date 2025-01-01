@@ -218,6 +218,17 @@ class CartController
      *      summary="Add multiple products to customer's cart",
      *      description="Add multiple products to customer's cart",
      *      security={ {"sanctum": {} }},
+     * 
+     *      @OA\Parameter(
+     *          name="productId",
+     *          description="Product id",
+     *          required=true,
+     *          in="path",
+     *
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
      *
      *      @OA\RequestBody(
      *
@@ -229,37 +240,38 @@ class CartController
      *                  @OA\Property(
      *                      property="items",
      *                      type="array",
-     *                      description="Array of product IDs and quantity to add to cart",
+     *                      description="Array of product details (Required)",
      *                      example={
      *                          {
-     *                              "selected_configurable_option": 1,
-     *                              "quantity": 2
-     *                          },
-     *                          {
-     *                              "selected_configurable_option": 2,
-     *                              "quantity": 3,
+     *                              "product_id": 1,
+     *                              "quantity": 2,
+     *                             "selected_configurable_option": 4,
      *                             "super_attribute": {
      *                                 "23": 4,
      *                                "24": 9
-     *                            }
+     *                               }
+     *                          },
+     *                          {
+     *                              "product_id": 2,
+     *                              "quantity": 3,
+     *                            "selected_configurable_option": 5,
+     *                           "super_attribute": {
+     *                              "23": 5,
+     *                            "24": 10
+     *                         }
      *                          }
      *                      },
      *
      *                      @OA\Items(
      *
      *                          @OA\Property(
-     *                              property="selected_configurable_option",
+     *                              property="product_id",
      *                              type="integer"
      *                          ),
      *                          @OA\Property(
      *                              property="quantity",
      *                              type="integer"
      *                          )
-     *                         @OA\Property(
-     *                             property="super_attribute",
-     *                            type="array",
-     *                           description="Use in configurable type product only (Required), variant's attribute & option ids"
-     *                         ),
      *                      )
      *                  ),
      *                  required={"items"}
@@ -288,15 +300,15 @@ class CartController
      *
      *      @OA\Response(
      *          response=400,
-     *          description="Item(s) cannot be added to cart, please try again later!"
+     *          description="Item cannot be added to cart, please try again later!"
      *      ),
      *      @OA\Response(
      *          response=404,
      *          description="Something went wrong!"
      *      )
      * )
-    */
-    
+     */
+
     public function batchAdd()
     {
     }
