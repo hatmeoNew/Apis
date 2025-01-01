@@ -294,7 +294,9 @@ class CartController
      *          response=404,
      *          description="Something went wrong!"
      *      )
-     *
+     * )
+    */
+    
     public function batchAdd()
     {
     }

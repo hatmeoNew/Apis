@@ -39,7 +39,16 @@ class ProductController extends CatalogController
      */
     public function allResources(Request $request)
     {
-        $results = $this->getRepositoryInstance()->getAll($request->input('category_id'));
+        // support product name and price sorting
+        if ($request->has('sort') && $request->get('sort') === 'name') {
+            $request->merge(['sort' => 'name', 'order' => $request->get('order', 'asc')]);
+        } elseif ($request->has('sort') && $request->get('sort') === 'price') {
+            $request->merge(['sort' => 'price', 'order' => $request->get('order', 'asc')]);
+        }
+
+        $results = $this->getRepositoryInstance()->getAll($request->all());
+
+        // $results = $this->getRepositoryInstance()->getAll($request->input('category_id'));
 
         return $this->getResourceCollection($results);
     }
