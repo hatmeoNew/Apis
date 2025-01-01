@@ -51,7 +51,7 @@ class CartController extends CustomerController
      * 
      * Batch Store items to the cart.
      */
-    public function batchStore(Request $request): JsonResponse
+    public function batchStore($productId, Request $request): JsonResponse
     {
         $products = $request->input('products');
 
