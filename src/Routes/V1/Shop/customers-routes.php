@@ -118,6 +118,9 @@ Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function ()
 
         Route::post('add/{productId}', 'store');
 
+        // batch add products to the cart
+        Route::post('batch-add/{productId}', 'batchStore');
+
         Route::put('update', 'update');
 
         Route::delete('remove/{cartItemId}', 'removeItem');

@@ -48,6 +48,56 @@ class CartController extends CustomerController
     }
 
     /**
+     * 
+     * Batch Store items to the cart.
+     */
+    public function batchStore(Request $request): JsonResponse
+    {
+        $products = $request->input('products');
+
+        $cart = Cart::getCart();
+
+        foreach ($products as $product) {
+            $product = $this->productRepository->with('parent')->find($product['product_id']);
+
+            Event::dispatch('checkout.cart.item.add.before', $product->id);
+
+            if ($cart) {
+                $cart = Cart::addProduct($product->id, $product);
+            } else {
+                $cart = Cart::addProduct($product->id, $product);
+            }
+
+            if (
+                is_array($cart)
+                && isset($cart['warning'])
+            ) {
+                return response()->json([
+                    'message' => $cart['warning'],
+                ], 400);
+            }
+
+            if ($cart) {
+                $customer = $this->resolveShopUser(request());
+
+                if ($customer) {
+                    $this->wishlistRepository->deleteWhere([
+                        'product_id'  => $product->id,
+                        'customer_id' => $customer->id,
+                    ]);
+                }
+
+                Event::dispatch('checkout.cart.item.add.after', $cart);
+            }
+        }
+
+        return response()->json([
+            'data'    => app()->make($this->resource(), ['resource' => Cart::getCart()]),
+            'message' => trans('Apis::app.shop.checkout.cart.item.success'),
+        ]);
+    }
+
+    /**
      * Store items to the cart.
      */
     public function store($productId): JsonResponse

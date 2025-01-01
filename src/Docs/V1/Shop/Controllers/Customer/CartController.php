@@ -211,6 +211,95 @@ class CartController
     }
 
     /**
+     * @OA\Post(
+     *      path="/api/v1/customer/cart/batch-add/{productId}",
+     *      operationId="batchAddCartItem",
+     *      tags={"Cart"},
+     *      summary="Add multiple products to customer's cart",
+     *      description="Add multiple products to customer's cart",
+     *      security={ {"sanctum": {} }},
+     *
+     *      @OA\RequestBody(
+     *
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *
+     *              @OA\Schema(
+     *
+     *                  @OA\Property(
+     *                      property="items",
+     *                      type="array",
+     *                      description="Array of product IDs and quantity to add to cart",
+     *                      example={
+     *                          {
+     *                              "selected_configurable_option": 1,
+     *                              "quantity": 2
+     *                          },
+     *                          {
+     *                              "selected_configurable_option": 2,
+     *                              "quantity": 3,
+     *                             "super_attribute": {
+     *                                 "23": 4,
+     *                                "24": 9
+     *                            }
+     *                          }
+     *                      },
+     *
+     *                      @OA\Items(
+     *
+     *                          @OA\Property(
+     *                              property="selected_configurable_option",
+     *                              type="integer"
+     *                          ),
+     *                          @OA\Property(
+     *                              property="quantity",
+     *                              type="integer"
+     *                          )
+     *                         @OA\Property(
+     *                             property="super_attribute",
+     *                            type="array",
+     *                           description="Use in configurable type product only (Required), variant's attribute & option ids"
+     *                         ),
+     *                      )
+     *                  ),
+     *                  required={"items"}
+     *              )
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *
+     *          @OA\JsonContent(
+     *
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string",
+     *                  example="Item(s) successfully added to cart."
+     *              ),
+     *              @OA\Property(
+     *                  property="data",
+     *                  type="object",
+     *                  ref="#/components/schemas/Cart"
+     *              )
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=400,
+     *          description="Item(s) cannot be added to cart, please try again later!"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Something went wrong!"
+     *      )
+     *
+    public function batchAdd()
+    {
+    }
+
+    /**
      * @OA\Put(
      *      path="/api/v1/customer/cart/update",
      *      operationId="updateCartItem",
@@ -480,4 +569,6 @@ class CartController
     public function removeCoupon()
     {
     }
+
+    
 }
