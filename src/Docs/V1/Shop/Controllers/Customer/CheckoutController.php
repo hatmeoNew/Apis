@@ -394,4 +394,50 @@ class CheckoutController
     public function saveOrder()
     {
     }
+
+    /**
+     * @OA\Post(
+     *      path="/api/v1/customer/checkout/quick-checkout",
+     *      operationId="quickCheckout",
+     *      tags={"Checkout"},
+     *      summary="Quick checkout",
+     *      description="Quick checkout",
+     *      security={ {"sanctum": {} }},
+     *
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *
+     *          @OA\JsonContent(
+     *
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string",
+     *                  example="Order saved successfully."
+     *              ),
+     *              @OA\Property(
+     *                  property="data",
+     *                  type="array",
+     *
+     *                  @OA\Items(
+     *
+     *                      @OA\Property(
+     *                          property="order",
+     *                          type="object",
+     *                          ref="#/components/schemas/Order"
+     *                      )
+     *                  )
+     *              )
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=404,
+     *          description="Something went wrong!"
+     *      )
+     * )
+     */
+    public function quickCheckout()
+    {
+    }
 }

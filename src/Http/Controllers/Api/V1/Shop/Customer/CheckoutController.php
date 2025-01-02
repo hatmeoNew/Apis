@@ -166,6 +166,41 @@ class CheckoutController extends CustomerController
     }
 
     /**
+     * Save order.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function quickCheckout(OrderRepository $orderRepository)
+    {
+        if (Cart::hasError()) {
+            abort(400);
+        }
+
+        Cart::collectTotals();
+
+        $this->validateOrder();
+
+        $cart = Cart::getCart();
+
+        if ($redirectUrl = Payment::getRedirectUrl($cart)) {
+            return response([
+                'redirect_url' => $redirectUrl,
+            ]);
+        }
+
+        $order = $orderRepository->create(Cart::prepareDataForOrder());
+
+        Cart::deActivateCart();
+
+        return response([
+            'data'    => [
+                'order' => new OrderResource($order),
+            ],
+            'message' => trans('Apis::app.shop.checkout.order-saved'),
+        ]);
+    }
+
+    /**
      * Validate order before creation.
      *
      * @return void|\Exception

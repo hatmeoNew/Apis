@@ -147,5 +147,7 @@ Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function ()
         Route::post('check-minimum-order', 'checkMinimumOrder');
 
         Route::post('save-order', 'saveOrder');
+
+        Route::post('quick-checkout', 'quickCheckout');
     });
 });
