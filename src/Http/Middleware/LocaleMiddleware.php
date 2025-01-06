@@ -32,7 +32,15 @@ class LocaleMiddleware
             return $next($request);
         }
 
-        app()->setLocale(core()->getDefaultChannel()->default_locale->code);
+        $code = core()->getDefaultChannel()->default_locale;
+        if(empty($code)){
+            // code load the default env
+            $code = env('APP_LOCALE', 'en');
+        }else{
+            $code = $code->code;
+        }
+
+        app()->setLocale($code);
 
         return $next($request);
     }
