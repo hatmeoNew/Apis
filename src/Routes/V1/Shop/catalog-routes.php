@@ -11,6 +11,10 @@ use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Catalog\ProductReviewControll
  * Product routes.
  */
 Route::controller(ProductController::class)->prefix('products')->group(function () {
+
+    Route::get('get-index/{template_id}', 'getIndexContent');
+    Route::get('get-recommend/{product_id}', 'getRecommend');
+
     Route::get('', 'allResources');
 
     Route::get('/{id}', 'getResource');
@@ -18,6 +22,9 @@ Route::controller(ProductController::class)->prefix('products')->group(function 
     Route::get('{id}/additional-information', 'additionalInformation');
 
     Route::get('{id}/configurable-config', 'configurableConfig');
+
+    
+
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function () {
@@ -36,6 +43,9 @@ Route::controller(CategoryController::class)->prefix('categories')->group(functi
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
+    Route::get('get-cms/{id}', 'getCmsList');
+    Route::get('cms-detail/{templateId}', 'getCmsDetail');
+    Route::Post('email', 'addEmail');
 
 });
 

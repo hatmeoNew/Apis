@@ -55,4 +55,9 @@ Route::group([
      * System routes.
      */
     require 'system-routes.php';
+
+        /**
+     * System routes.
+     */
+    require 'template-routes.php';
 });

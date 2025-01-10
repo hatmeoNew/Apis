@@ -24,6 +24,15 @@ class OrderController extends CustomerController
         return OrderResource::class;
     }
 
+    public function getResource(Request $request, $id)
+    {
+        $resourceClassName = $this->resource();
+        $resource = $this->getRepositoryInstance()->findOrFail($id);
+
+
+        return new $resourceClassName($resource);
+    }
+
     /**
      * Cancel customer's order.
      *

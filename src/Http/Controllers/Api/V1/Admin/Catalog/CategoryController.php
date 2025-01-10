@@ -72,6 +72,18 @@ class CategoryController extends CatalogController
 
         Event::dispatch('catalog.category.update.before', $id);
 
+
+          $logo_path =  $request->input('logo_path');
+        //   $banner_path =  $request->input('banner_path');
+
+
+        // var_dump($request->all());
+
+        $request['logo_path'] = $logo_path[0];
+        // $request['logo_path'] = $logo_path[0];
+
+
+
         $category = $this->getRepositoryInstance()->update($request->only([
             'name',
             'parent_id',
@@ -88,6 +100,9 @@ class CategoryController extends CatalogController
             'banner_path',
             core()->getCurrentLocale()->code
         ]), $id);
+
+
+      
 
         Event::dispatch('catalog.category.update.after', $category);
 

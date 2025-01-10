@@ -123,6 +123,7 @@ Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function ()
 
         Route::put('update', 'update');
 
+
         Route::delete('remove/{cartItemId}', 'removeItem');
 
         Route::delete('empty', 'empty');
@@ -132,6 +133,10 @@ Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function ()
         Route::post('coupon', 'applyCoupon');
 
         Route::delete('coupon', 'removeCoupon');
+
+        Route::post('order_addr_after', 'OrderAddrAfter');
+
+        Route::post('order-status', 'OrderStatus');
     });
 
     /**
