@@ -134,9 +134,12 @@ Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function ()
 
         Route::delete('coupon', 'removeCoupon');
 
+        // paypal
         Route::post('order_addr_after', 'OrderAddrAfter');
-
+        // paypal confirm
         Route::post('order-status', 'OrderStatus');
+        // airwallex
+        Route::post('order-add-sync', 'OrderAddSync');
     });
 
     /**

@@ -60,6 +60,9 @@ class ProductController extends CatalogController
             ]);
         }        
 
+    
+
+
         $input = [];
         $input['sku'] = $req['sku'];
         $input['type'] = 'configurable';
@@ -254,6 +257,10 @@ class ProductController extends CatalogController
         $skus = $request->input('tableData');
 
         $categories = $request->input('categories');
+
+       
+
+
         $categories[] = 5; // add the default category
 
         $Variants = [];
@@ -267,8 +274,8 @@ class ProductController extends CatalogController
         }
 
         // match the variants to the sku id
-
-
+       
+        // print_r($categories);
         $i = 0;
         foreach($skus as $key=>$sku) {
             $Variant = [];
@@ -329,11 +336,18 @@ class ProductController extends CatalogController
        
         //Log::info("quick-create-product: ".json_encode($tableData));
 
+
+      
+
         $product = $this->getRepositoryInstance()->update($tableData, $id);
 
         Event::dispatch('catalog.product.update.after', $product);
 
         $images = $request->input('images');
+
+
+
+        
 
         // add images to the product
         $productImages = [];
@@ -344,6 +358,10 @@ class ProductController extends CatalogController
                 'position' => $key
             ];
         }
+
+
+
+       
 
         $product->images()->createMany($productImages);
 

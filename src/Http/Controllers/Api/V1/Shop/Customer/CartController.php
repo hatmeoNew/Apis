@@ -16,6 +16,7 @@ use Webkul\Paypal\Payment\SmartButton;
 use Webkul\Product\Repositories\ProductRepository;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Shop\Checkout\CartResource;
 use Webkul\Sales\Repositories\OrderRepository;
+use Illuminate\Support\Facades\Redis;
 
 class CartController extends CustomerController
 {
@@ -330,8 +331,6 @@ class CartController extends CustomerController
 
 
     public function OrderAddrAfter(Request $request) {
-
-
 
         $input = $request->all();
 
@@ -741,4 +740,245 @@ class CartController extends CustomerController
         $data['order_id'] = $order_id;
         return response()->json($data);
     }
+
+    // airwallex payment
+    public function OrderAddSync(Request $request) {
+        $input = $request->all();
+        $addressData = [];
+
+        $payment_method_input = $request->input('payment_method');
+        $refer = isset($input['refer']) ? trim($input['refer']) : "";
+
+        $addressData['billing'] = [];
+        $address1 = [];
+        array_push($address1, $input['address']);
+        $addressData['billing']['city'] = $input['city'];
+        $addressData['billing']['country'] = $input['country'];
+        $addressData['billing']['email'] = $input['email'];
+        $addressData['billing']['first_name'] = $input['first_name'];
+        $addressData['billing']['last_name'] = $input['second_name'];
+        $input['phone_full'] = str_replace('undefined+','', $input['phone_full']);
+        $addressData['billing']['phone'] = $input['phone_full'];
+        $addressData['billing']['postcode'] = $input['code'];
+        $addressData['billing']['state'] = $input['province'];
+        $addressData['billing']['use_for_shipping'] = true;
+        $addressData['billing']['address1'] = $address1;
+
+        $addressData['billing']['address1'] = implode(PHP_EOL, $addressData['billing']['address1']);
+
+        $shipping = [];
+        $address1 = [];
+        array_push($address1, $input['address']);
+        $shipping['city'] = $input['city'];
+        $shipping['country'] = $input['country'];
+        $shipping['email'] = $input['email'];
+        $shipping['first_name'] = $input['first_name'];
+        $shipping['last_name'] = $input['second_name'];
+        //undefined+
+        $input['phone_full'] = str_replace('undefined+','', $input['phone_full']);
+        $shipping['phone'] = $input['phone_full'];
+        $shipping['postcode'] = $input['code'];
+        $shipping['state'] = $input['province'];
+        $shipping['use_for_shipping'] = true;
+        $shipping['address1'] = $address1;
+        $shipping['address1'] = implode(PHP_EOL, $shipping['address1']);
+
+
+        $addressData['shipping'] = $shipping;
+        $addressData['shipping']['isSaved'] = false;
+        $address1 = [];
+        array_push($address1, $input['address']);
+        $addressData['shipping']['address1'] = $address1;
+        $addressData['shipping']['address1'] = implode(PHP_EOL, $addressData['shipping']['address1']);
+
+        // customer bill address info
+        if(@$input['shipping_address']=="other") {
+            $address1 = [];
+            array_push($address1, $input['bill_address']);
+            $billing = [];
+            $billing['city'] = $input['bill_city'];
+            $billing['country'] = $input['bill_country'];
+            $billing['email'] = $input['email'];
+            $billing['first_name'] = $input['bill_first_name'];
+            $billing['last_name'] = $input['bill_second_name'];
+            //undefined+
+            $input['phone_full'] = str_replace('undefined+','', $input['phone_full']);
+            $billing['phone'] = $input['phone_full'];
+            $billing['postcode'] = $input['bill_code'];
+            $billing['state'] = $input['bill_province'];
+            //$billing['use_for_shipping'] = true;
+            $billing['address1'] = $address1;
+            $billing['address1'] = implode(PHP_EOL, $billing['address1']);
+
+        // $billing['address1'] = implode(PHP_EOL, $billing['address1']);
+
+            $addressData['billing'] = $billing;
+        }
+
+
+        Log::info("address" . json_encode($addressData));
+
+        if (
+            Cart::hasError()
+            || ! Cart::saveCustomerAddress($addressData)
+        ) {
+            return new JsonResource([
+                'redirect' => false,
+                'data'     => Cart::getCart(),
+            ]);
+        }
+
+
+
+        //
+        $shippingMethod = "free_free"; // free shipping
+        $shippingMethod = "flatrate_flatrate";
+
+        if (
+            Cart::hasError()
+            || ! $shippingMethod
+            || ! Cart::saveShippingMethod($shippingMethod)
+        ) {
+            return response()->json([
+                'redirect_url' => route('shop.checkout.cart.index'),
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        Cart::collectTotals();
+
+
+        if($payment_method_input=="airwallex_klarna") $payment_method = "airwallex";
+        if($payment_method_input=="airwallex_dropin") $payment_method = "airwallex";
+        if($payment_method_input=="airwallex_google") $payment_method = "airwallex";
+        if($payment_method_input=="airwallex_apple") $payment_method = "airwallex";
+        if($payment_method_input=="airwallex") $payment_method = "airwallex";
+
+        // when enable the upselling and can config the upselling rule for carts
+        if($payment_method=='airwallex') {
+            //
+            $payment = [];
+            $payment['description'] = $payment_method."-".$refer;
+            $payment['method'] = $payment_method;
+            $payment['method_title'] = $payment_method."-".$refer;
+            $payment['sort'] = "2";
+            // Cart::savePaymentMethod($payment);
+
+            if (
+                Cart::hasError()
+                || ! $payment
+                || ! Cart::savePaymentMethod($payment)
+            ) {
+                return response()->json([
+                    'redirect_url' => route('shop.checkout.cart.index'),
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            
+            Cart::collectTotals();
+            $this->validateOrder();
+            $cart = Cart::getCart();
+
+            $order = $this->orderRepository->create(Cart::prepareDataForOrder());
+            // Cart::deActivateCart();
+            // Cart::activateCartIfSessionHasDeactivatedCartId();
+            $data['result'] = 200;
+            $data['order'] = $order;
+            if ($order) {
+                $orderId = $order->id;
+
+                //customer id
+                $cus_id = isset($input['cus_id']) ? trim($input['cus_id']) : null;
+
+                $airwallex_customer = [];
+                if(is_null($cus_id)) {
+                    //Step 1: Create a Customer
+                    //var_dump($order->id);
+                    try {
+                        $airwallex_customer = $this->airwallex->createCustomer($cart, $order->id);
+                        $cus_id = $airwallex_customer->id;
+                    } catch (\Exception $e) {
+                        return response()->json(['error' => $e->getMessage(),'code'=>'203'], 400);
+                    }
+                }else{
+                    $airwallex_customer['id'] = $cus_id;
+                }
+
+                //create a airwallex payment order
+                $transactionManager = $this->airwallex->createPaymentOrder($cart, $order->id, $cus_id);
+                //Step 2: Generate a client secret for the Customer
+                $customerClientSecret = $this->airwallex->createCustomerClientSecret($cus_id);
+                if(!isset($transactionManager->client_secret)) {
+                    response()->json(['error' => $transactionManager->body->message,'code'=>'203'], 400);
+                }
+
+                //$transactionManager = $this->airwallex->createPaymentOrder($cart, $order->id);
+                Log::info("airwallex-".$order->id."--".json_encode($transactionManager));
+                $data['client_secret'] = $transactionManager->client_secret;
+                $data['payment_intent_id'] = $transactionManager->id;
+                $data['currency'] = $transactionManager->currency;
+                $data['transaction'] = $transactionManager;
+                $data['customer'] = $airwallex_customer;
+                $data['customer_client_secret'] = $customerClientSecret;
+                $data['country'] = $input['country'];
+                $data['billing'] = $addressData['billing'];
+                $data['airwallex'] = $this->airwallex;
+
+                // redis save the customer id from airwallex
+                Redis::set("airwallex_customer_".$order->id, $cus_id);
+            }
+
+            return response()->json($data);
+        }
+
+    }
+
+    /**
+     * Validate order before creation.
+     *
+     * @return void|\Exception
+     */
+    public function validateOrder()
+    {
+        $cart = Cart::getCart();
+
+        $minimumOrderAmount = core()->getConfigData('sales.order_settings.minimum_order.minimum_order_amount') ?: 0;
+
+        if (
+            auth()->guard('customer')->check()
+            && auth()->guard('customer')->user()->is_suspended
+        ) {
+            throw new \Exception(trans('shop::app.checkout.cart.suspended-account-message'));
+        }
+
+        if (
+            auth()->guard('customer')->user()
+            && ! auth()->guard('customer')->user()->status
+        ) {
+            throw new \Exception(trans('shop::app.checkout.cart.inactive-account-message'));
+        }
+
+        if (! $cart->checkMinimumOrder()) {
+            throw new \Exception(trans('shop::app.checkout.cart.minimum-order-message', ['amount' => core()->currency($minimumOrderAmount)]));
+        }
+
+        if ($cart->haveStockableItems() && ! $cart->shipping_address) {
+            throw new \Exception(trans('shop::app.checkout.cart.check-shipping-address'));
+        }
+
+        if (! $cart->billing_address) {
+            throw new \Exception(trans('shop::app.checkout.cart.check-billing-address'));
+        }
+
+        if (
+            $cart->haveStockableItems()
+            && ! $cart->selected_shipping_rate
+        ) {
+            throw new \Exception(trans('shop::app.checkout.cart.specify-shipping-method'));
+        }
+
+        if (! $cart->payment) {
+            throw new \Exception(trans('shop::app.checkout.cart.specify-payment-method'));
+        }
+    }
+
 }
