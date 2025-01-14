@@ -362,6 +362,23 @@ class ProductController extends CatalogController
 
         $product->images()->createMany($productImages);
 
+        
+
+        // add images to the variants
+        $variants = $product->variants()->get();
+        foreach($variants as $key=> $variant) {
+            $variantImages = [];
+            $image_url = $skus[$key]['images'];
+            if($image_url) {
+                $variantImages[] = [
+                    'path' => $image_url,
+                    'type' => 'images',
+                    'position' => 0
+                ];
+                $variant->images()->createMany($variantImages);
+            }
+        }
+
         return response([
             'data'    => new ProductResource($product),
             'message' => trans('Apis::app.admin.catalog.products.create-success'),
