@@ -261,7 +261,7 @@ class ProductController extends CatalogController
        
 
 
-        $categories[] = 5; // add the default category
+        // $categories[] = 5;
 
         $Variants = [];
         $VariantsImages = [];
@@ -333,8 +333,9 @@ class ProductController extends CatalogController
         $tableData['manage_stock'] = 0;
         $tableData['inventories'][1] = 1000;
         $tableData['product_number'] = 10000;
+        $tableData['categories'] = $categories;
        
-        //Log::info("quick-create-product: ".json_encode($tableData));
+        Log::info("quick-create-product: ".json_encode($tableData));
 
 
       
@@ -358,10 +359,6 @@ class ProductController extends CatalogController
                 'position' => $key
             ];
         }
-
-
-
-       
 
         $product->images()->createMany($productImages);
 
