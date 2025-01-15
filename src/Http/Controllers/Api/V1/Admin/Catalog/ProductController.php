@@ -343,7 +343,7 @@ class ProductController extends CatalogController
             $option3 = isset($super_attributes_label[3]) ? $super_attributes_label[3] : null;
 
             //if($option1) $Variant[$option1] = $sku['option1'];
-            if($option1) $Variant[$option1] = $this->super_attributes_label($option1, $sku['option1']);
+            if($option1) $Variant[$option1] = $this->findAttributeOptionID($option1, $sku['option1']);
             if($option2) $Variant[$option2] = $this->findAttributeOptionID($option2, $sku['option2']);
             if($option3) $Variant[$option3] = $this->findAttributeOptionID($option3, $sku['option3']);
             
