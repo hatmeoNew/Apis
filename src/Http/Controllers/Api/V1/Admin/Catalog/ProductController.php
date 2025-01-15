@@ -134,6 +134,8 @@ class ProductController extends CatalogController
 
         // create super attributes and check if the attribute is valid
         $attributeRepository = app('Webkul\Attribute\Repositories\AttributeRepository');
+        $attributeOptionDeleted = [];
+        $super_attributes_ids_deleted = [];
         foreach ($req['options'] as $attribute) {
             //var_dump($attribute);exit;
 
@@ -182,9 +184,11 @@ class ProductController extends CatalogController
 
             //var_dump($attributeOptionItems->toArray());exit;
 
-            $attributeOptionDeleted = [];
+            
 
             foreach ($attribute['values'] as $option) {
+
+                //var_dump($option);
 
                 // check if the attribute option is have in the attributeOptionItems
                 $attributeOption = $attributeOptionRepository->findOneByField(['admin_name'=>$option, 'attribute_id'=>$attributeRepos->id]);
@@ -203,17 +207,30 @@ class ProductController extends CatalogController
             // check if the attribute option is deleted
             foreach($attributeOptionItems as $attributeOptionItem) {
                 if(!in_array($attributeOptionItem, $attribute['values'])){
+                    $deleteAttrOption = $attributeOptionRepository->Where('admin_name', $attributeOptionItem)->where('attribute_id', $attributeRepos->id)->first();
+                    $super_attributes_ids_deleted[$attributeRepos->id][] = $deleteAttrOption->id;
                     $attributeOptionDeleted[] = $attributeOptionItem;
                 }
             }
 
+            
+
             // delete the attribute option
             if(count($attributeOptionDeleted)){
-                $attributeOptionRepository->WhereIn('admin_name', $attributeOptionDeleted)->where('attribute_id', $attributeRepos->id)->delete();
+                // delete the attribute option id in the attributeOptionArray
+                $deleteAttrOption = $attributeOptionRepository->WhereIn('admin_name', $attributeOptionDeleted)->where('attribute_id', $attributeRepos->id)->delete();
+                //var_dump($deleteAttrOption);
+
+                
+
             }
+
+            //var_dump($attributeOptionArray,$super_attributes_ids);exit;
 
             
         }
+
+        //var_dump($attributeOptionDeleted, $super_attributes_ids_deleted, $super_attributes_ids);exit;
 
         $input['super_attributes'] = $super_attributes;
         $input['channel'] = Core()->getCurrentChannel()->code;
@@ -230,6 +247,11 @@ class ProductController extends CatalogController
                     'attribute_group_id' => $attribute_group_id
                 ]);
             }
+        }
+
+        // delete the attribute group mapping
+        foreach($super_attributes_ids_deleted as $key=>$super_attributes_id) {
+            $attribute_group_mapping = DB::table('attribute_group_mappings')->where("attribute_id", $super_attributes_id)->where("attribute_group_id", $attribute_group_id)->delete();
         }
 
         if($req['id']){
@@ -321,7 +343,7 @@ class ProductController extends CatalogController
             $option3 = isset($super_attributes_label[3]) ? $super_attributes_label[3] : null;
 
             //if($option1) $Variant[$option1] = $sku['option1'];
-            if($option1) $Variant[$option1] = $this->findAttributeOptionID($option1, $sku['option1']);
+            if($option1) $Variant[$option1] = $this->super_attributes_label($option1, $sku['option1']);
             if($option2) $Variant[$option2] = $this->findAttributeOptionID($option2, $sku['option2']);
             if($option3) $Variant[$option3] = $this->findAttributeOptionID($option3, $sku['option3']);
             
