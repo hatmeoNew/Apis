@@ -35,6 +35,9 @@ class ChannelResource extends JsonResource
             'updated_at'        => $this->updated_at,
             'locales'           => LocaleResource::collection($this->locales),
             'currencies'        => CurrencyResource::collection($this->currencies),
+            'base_currency_id'  => $this->base_currency_id,
+            'base_currency_code' => core()->getBaseCurrencyCode(),
+            'currencySymbol'    => core()->currencySymbol(core()->getBaseCurrencyCode()),
         ];
     }
 }

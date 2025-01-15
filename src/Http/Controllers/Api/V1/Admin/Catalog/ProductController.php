@@ -60,9 +60,6 @@ class ProductController extends CatalogController
             ]);
         }        
 
-    
-
-
         $input = [];
         $input['sku'] = $req['sku'];
         $input['type'] = 'configurable';
@@ -138,7 +135,7 @@ class ProductController extends CatalogController
         // create super attributes and check if the attribute is valid
         $attributeRepository = app('Webkul\Attribute\Repositories\AttributeRepository');
         foreach ($req['options'] as $attribute) {
-            //var_dump($attribute['values']);
+            //var_dump($attribute);exit;
 
             $code = "attr_".$input['attribute_family_id']."_".md5($attribute['name']);
             $super_attributes_label[$attribute['position']] = $code;
@@ -179,7 +176,17 @@ class ProductController extends CatalogController
             // check if the attribute option is valid
             $attributeOptionRepository = app('Webkul\Attribute\Repositories\AttributeOptionRepository');
             $attributeOptionArray = [];
+
+            // get all value of the attribute
+            $attributeOptionItems = $attributeOptionRepository->where('attribute_id', $attributeRepos->id)->pluck('admin_name')->toArray();
+
+            //var_dump($attributeOptionItems->toArray());exit;
+
+            $attributeOptionDeleted = [];
+
             foreach ($attribute['values'] as $option) {
+
+                // check if the attribute option is have in the attributeOptionItems
                 $attributeOption = $attributeOptionRepository->findOneByField(['admin_name'=>$option, 'attribute_id'=>$attributeRepos->id]);
                 if(!$attributeOption){
                     $attributeOption = $attributeOptionRepository->create([
@@ -188,13 +195,24 @@ class ProductController extends CatalogController
                         'attribute_id' => $attributeRepos->id
                     ]);
                 }
-                //var_dump($attributeOption->admin_name);
                 $attributeOptionArray[$attributeOption->id] = $attributeOption->id;
-
-                //Log::info('Attribute Option: ' . json_encode($attributeOption));
             }
             $super_attributes[$attributeRepos->code] = $attributeOptionArray;
             $super_attributes_ids[$attributeRepos->id] = $attributeRepos->id;
+
+            // check if the attribute option is deleted
+            foreach($attributeOptionItems as $attributeOptionItem) {
+                if(!in_array($attributeOptionItem, $attribute['values'])){
+                    $attributeOptionDeleted[] = $attributeOptionItem;
+                }
+            }
+
+            // delete the attribute option
+            if(count($attributeOptionDeleted)){
+                $attributeOptionRepository->WhereIn('admin_name', $attributeOptionDeleted)->where('attribute_id', $attributeRepos->id)->delete();
+            }
+
+            
         }
 
         $input['super_attributes'] = $super_attributes;
