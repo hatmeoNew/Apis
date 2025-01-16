@@ -378,6 +378,8 @@ class ProductController extends CatalogController
         Log::info("quick-create-product: ".json_encode($tableData));
 
 
+        // check the sku is exist and update the product
+        
       
 
         $product = $this->getRepositoryInstance()->update($tableData, $id);

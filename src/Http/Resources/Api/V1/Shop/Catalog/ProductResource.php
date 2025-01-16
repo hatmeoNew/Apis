@@ -213,7 +213,18 @@ class ProductResource extends JsonResource
     private function getConfigurableProductInfo($product)
     {
         return [
-            'variants' => $product->variants,
+            // add variants product images
+            'variants' => $product->variants->map(function ($variant) {
+                return [
+                    'id'          => $variant->id,
+                    'name'        => $variant->name,
+                    'sku'         => $variant->sku,
+                    'price'       => core()->convertPrice($variant->getTypeInstance()->getMinimalPrice()),
+                    'formatted_price' => core()->currency($variant->getTypeInstance()->getMinimalPrice()),
+                    'isSaleable'  => $variant->getTypeInstance()->isSaleable(),
+                    'image'       => ProductImage::getProductBaseImage($variant),
+                ];
+            }),
         ];
     }
 
