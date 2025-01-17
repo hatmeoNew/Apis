@@ -179,7 +179,7 @@ class ChannelController extends SettingController
             'meta_keywords'    => $editedData['seo_keywords'],
         ];
 
-        $editedData['home_seo'] = json_encode($editedData['home_seo']);
+        //$editedData['home_seo'] = json_encode($editedData['home_seo']);
 
         unset($editedData['seo_title'], $editedData['seo_description'], $editedData['seo_keywords']);
 
