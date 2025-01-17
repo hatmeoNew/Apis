@@ -316,26 +316,36 @@ class CartRuleController extends MarketingController
 
         $rules = $request->rules;
 
+        $product_price = $product->price;
+
+        $product_price = intval($product_price);
+
+        if($product_price <= 0){
+            return false;
+        }
+
         foreach($rules as $rule){
+
+            $rulesAttributes = $rule['attributes'];
+
+            $qty = 0;
+            $status = 0;    
 
             $cartRuleData = [
                 'name'                => $product->name . $rule['action_type']. $rule['price'],
                 'starts_from'         => null,
                 'ends_till'           => null,
                 'action_type'         => $rule['action_type'],
-                'discount_amount'     => $rule['price'],
+                'discount_amount'     => 0,
                 'end_other_rules'     => 1,
-                'status'              => 1,
+                'status'              => $status, // 0 means inactive
                 'coupon_type'         => 0,
                 'use_auto_generation' => 0,
                 'discount_step'       => 0,
                 'channels'            => [1],
                 'customer_groups'     => [1],
+                'discount_quantity'   => 0,
             ];
-
-            $rulesAttributes = $rule['attributes'];
-
-            //var_dump($rule['attributes']);exit;
 
             foreach($rulesAttributes as $key=>$attribute){
                 $cartRuleData['conditions'][] = [
@@ -344,7 +354,23 @@ class CartRuleController extends MarketingController
                     "attribute_type" => "integer",
                     'value' => $attribute['value'],
                 ];
+                if($attribute['attribute'] == 'cart_item|quantity'){
+                    $qty = $attribute['value'];
+                }
             }
+
+            if($qty > 1) $status = 1;
+
+            $discount_amount = ($product_price * $qty - $rule['price']) / $qty;
+
+            $cartRuleData['discount_amount'] = $discount_amount;
+            $cartRuleData['status'] = $status;
+            $cartRuleData['discount_quantity'] = $qty;
+            
+
+            
+
+            
 
             $id = $rule['id'];
 
