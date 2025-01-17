@@ -412,7 +412,8 @@ class CartRuleController extends MarketingController
         // product slug
         $slug = $product->url_key;
         $currency = core()->getCurrentCurrency()->code;
-        Cache::forget($this->checkout_v2_cache_key.$slug);
+        //echo $this->checkout_v2_cache_key.$slug.$currency;
+        Cache::forget($this->checkout_v2_cache_key.$slug.$currency);
         Cache::forget("product_ext_".$product->id."_1_".$currency);
         Cache::forget("product_ext_".$product->id."_2_".$currency);
         Cache::forget("product_ext_".$product->id."_3_".$currency);
