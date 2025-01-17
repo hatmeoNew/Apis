@@ -388,10 +388,6 @@ class ProductController extends CatalogController
 
         $images = $request->input('images');
 
-
-
-        
-
         // add images to the product
         $productImages = [];
         foreach($images as $key=>$image) {

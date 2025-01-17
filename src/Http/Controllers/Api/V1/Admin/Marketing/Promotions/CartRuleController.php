@@ -8,9 +8,11 @@ use Webkul\CartRule\Repositories\CartRuleRepository;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Marketing\MarketingController;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Marketing\Promotions\CartRuleResource;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 
 class CartRuleController extends MarketingController
 {
+    private $checkout_v2_cache_key = "checkout_v2_cache_";
     /**
      * Repository class name.
      */
@@ -368,6 +370,11 @@ class CartRuleController extends MarketingController
             Redis::sadd('product-quantity-rules-'.$product_id, $cartRule->id);
 
         }
+
+        // clear the cache in redis
+        // product slug
+        $slug = $product->url_key;
+        Cache::forget($this->checkout_v2_cache_key.$slug);
 
         return response([
             'message' => trans('Apis::app.admin.marketing.promotions.cart-rules.create-success'),
