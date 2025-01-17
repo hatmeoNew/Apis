@@ -325,6 +325,7 @@ class CartRuleController extends MarketingController
                 'action_type'         => $rule['action_type'],
                 'discount_amount'     => $rule['price'],
                 'end_other_rules'     => 1,
+                'status'              => 1,
                 'coupon_type'         => 0,
                 'use_auto_generation' => 0,
                 'discount_step'       => 0,
@@ -374,7 +375,12 @@ class CartRuleController extends MarketingController
         // clear the cache in redis
         // product slug
         $slug = $product->url_key;
+        $currency = core()->getCurrentCurrency()->code;
         Cache::forget($this->checkout_v2_cache_key.$slug);
+        Cache::forget("product_ext_".$product->id."_1_".$currency);
+        Cache::forget("product_ext_".$product->id."_2_".$currency);
+        Cache::forget("product_ext_".$product->id."_3_".$currency);
+        Cache::forget("product_ext_".$product->id."_4_".$currency);
 
         return response([
             'message' => trans('Apis::app.admin.marketing.promotions.cart-rules.create-success'),
