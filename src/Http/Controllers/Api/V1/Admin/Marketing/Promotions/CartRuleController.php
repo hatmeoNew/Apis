@@ -9,6 +9,7 @@ use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Marketing\MarketingControlle
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Marketing\Promotions\CartRuleResource;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class CartRuleController extends MarketingController
 {
@@ -318,7 +319,9 @@ class CartRuleController extends MarketingController
 
         $product_price = $product->price;
 
-        $product_price = intval($product_price);
+        $product_price = floatval($product_price);
+
+        //var_dump($product_price);exit;
 
         if($product_price <= 0){
             return false;
@@ -359,25 +362,31 @@ class CartRuleController extends MarketingController
                 }
             }
 
-            if($qty > 1) $status = 1;
+            if($qty > 1) {
+                $status = 1;
+                $discount_amount = ($product_price * $qty - $rule['price']) / $qty;
+            } else{
+                $discount_amount = 0;
+                $status = 0;
+            }
 
-            $discount_amount = ($product_price * $qty - $rule['price']) / $qty;
+            //if($qty == 1) {} continue;
+
+            $id = $rule['id'];
+
+            Log::info('Product Price: '.$product_price);
+            Log::info('Qty: '.$qty);
+            Log::info('status: '.$status);
+            Log::info('ID: '.$id);
 
             $cartRuleData['discount_amount'] = $discount_amount;
             $cartRuleData['status'] = $status;
             $cartRuleData['discount_quantity'] = $qty;
-            
-
-            
-
-            
-
-            $id = $rule['id'];
-
+                        
             if($id > 0) {
 
                 // update the rule
-                $cartRule = $this->getRepositoryInstance()->findOrFail($id);
+                //$cartRule = $this->getRepositoryInstance()->findOrFail($id);
 
                 Event::dispatch('promotions.cart_rule.update.before', $id);
 
@@ -396,6 +405,7 @@ class CartRuleController extends MarketingController
                
             Redis::sadd('product-quantity-rules-'.$product_id, $cartRule->id);
 
+            Redis::zadd('product-quantity-price-'.$product_id, $rule['price'], $cartRule->id);
         }
 
         // clear the cache in redis
@@ -439,7 +449,17 @@ class CartRuleController extends MarketingController
 
         $rules = Redis::smembers('product-quantity-rules-'.$product_id);
 
+        $prices = Redis::zRange('product-quantity-price-'.$product_id, 0, -1, 'WITHSCORES');
+
+        //var_dump($prices);exit;
+
         $rules = $this->getRepositoryInstance()->findWhereIn('id', $rules);
+
+        $rules = $rules->map(function($rule, $key) use($prices){
+            if(isset($prices[$rule->id])) $rule['discount_amount'] = round($prices[$rule->id], 2);
+                
+            return $rule;
+        });
 
 
         return response()->json([
