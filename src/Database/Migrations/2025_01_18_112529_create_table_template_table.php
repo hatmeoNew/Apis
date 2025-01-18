@@ -11,15 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('template', function (Blueprint $table) {
-            $table->id();
-            $table->string('template_name');
+        Schema::table('template', function (Blueprint $table) {
             $table->string('template_banner');
-            $table->string('des');
-            $table->string('template_link');
-            $table->string('template_countent');
-            $table->string('created_at');
-            $table->string('updated_at');
         });
     }
 
@@ -28,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('template');
+        Schema::table('template', function (Blueprint $table) {
+            $table->dropColumn('template_banner');
+        });
     }
 };
