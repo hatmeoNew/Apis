@@ -113,6 +113,7 @@ class ProductController extends CatalogController
 
                 foreach($config_info as $key => $value){
                     $config_info[$key]['home_banner'] = json_decode($value['home_banner'], true);
+                    $config_info[$key]['template_banner'] = $value['template_banner'];
                     $recommend = json_decode($value['recommend'], true);
 
 

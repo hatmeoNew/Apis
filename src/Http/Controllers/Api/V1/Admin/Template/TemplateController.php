@@ -22,7 +22,7 @@ class TemplateController extends Controller
 
     // 查询数据并应用分页
     $templates = DB::table('template')
-        ->select('id', 'template_name', 'template_link','des')
+        ->select('id', 'template_name', 'template_link','des','template_banner')
         ->offset($offset)
         ->limit($limit)
         ->get();
@@ -219,13 +219,15 @@ class TemplateController extends Controller
     public function templateContent($id)
     {
 
-      
+
        
         $template = DB::table('site_config')->where('template_id',$id)->first();
 
         if($template){
 
             $template->home_banner = json_decode($template->home_banner);
+            $template->template_banner = $template->template_banner;
+
             $template->recommend = json_decode($template->recommend);
 
 
