@@ -374,10 +374,10 @@ class CartRuleController extends MarketingController
 
             $id = $rule['id'];
 
-            Log::info('Product Price: '.$product_price);
-            Log::info('Qty: '.$qty);
-            Log::info('status: '.$status);
-            Log::info('ID: '.$id);
+            // Log::info('Product Price: '.$product_price);
+            // Log::info('Qty: '.$qty);
+            // Log::info('status: '.$status);
+            // Log::info('ID: '.$id);
 
             $cartRuleData['discount_amount'] = $discount_amount;
             $cartRuleData['status'] = $status;
