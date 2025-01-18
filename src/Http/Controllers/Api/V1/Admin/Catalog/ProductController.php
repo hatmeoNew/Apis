@@ -432,7 +432,7 @@ class ProductController extends CatalogController
         $attribute = $attributeRepository->findOneByField('code', $attribute_id);
         if(!$attribute) return 0;
 
-        Log::info("findAttributeOptionID: ".$attribute->id." ".$attribute_value);
+        //Log::info("findAttributeOptionID: ".$attribute->id." ".$attribute_value);
 
         //
         $attributeOptionRepository = app('Webkul\Attribute\Repositories\AttributeOptionRepository');
