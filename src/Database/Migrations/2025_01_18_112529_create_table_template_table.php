@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('template', function (Blueprint $table) {
-            $table->string('template_banner');
+        Schema::table('site_config', function (Blueprint $table) {
+            $table->string('template_banner')->nullable()->after('recommend')->comment('推荐banner');
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('template', function (Blueprint $table) {
+        Schema::table('site_config', function (Blueprint $table) {
             $table->dropColumn('template_banner');
         });
     }

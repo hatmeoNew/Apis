@@ -181,6 +181,14 @@ class TemplateController extends Controller
     }
 
 
+    /**
+     * 
+     * edit the template content
+     * 
+     * @param Request $request
+     * 
+     * 
+     */
     public function editTemplateContent(Request $request)
     {
 
@@ -196,6 +204,8 @@ class TemplateController extends Controller
         $home_banner = $request->home_banner;
         $recommend = $request->recommend;
 
+        $template_banner = $request->template_banner;
+
 
         $home_banner = json_encode($home_banner);
         $recommend = json_encode($recommend);
@@ -205,6 +215,7 @@ class TemplateController extends Controller
             'site_ico' => $site_ico,
             'home_banner' => $home_banner,
             'recommend' => $recommend,
+            'template_banner' => $template_banner,
             'created_at' => now()
         ]);
 
@@ -219,8 +230,6 @@ class TemplateController extends Controller
     public function templateContent($id)
     {
 
-
-       
         $template = DB::table('site_config')->where('template_id',$id)->first();
 
         if($template){
@@ -238,14 +247,8 @@ class TemplateController extends Controller
 
     }
 
-
-
-
     public function productInfo(Request $request)
     {
-
-      
-      
 
     }
 
