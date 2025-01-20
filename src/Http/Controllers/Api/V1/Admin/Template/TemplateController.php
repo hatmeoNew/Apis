@@ -226,7 +226,7 @@ class TemplateController extends Controller
         if($template){
 
             $template->home_banner = json_decode($template->home_banner);
-            $template->template_banner = $template->template_banner;
+            $template->template_banner = isset($template->template_banner) ? $template->template_banner : '';
 
             $template->recommend = json_decode($template->recommend);
 
