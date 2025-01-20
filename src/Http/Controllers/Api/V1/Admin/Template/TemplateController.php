@@ -22,7 +22,7 @@ class TemplateController extends Controller
 
     // 查询数据并应用分页
     $templates = DB::table('template')
-        ->select('id', 'template_name', 'template_link','des','template_banner')
+        ->select('id', 'template_name', 'template_link','des')
         ->offset($offset)
         ->limit($limit)
         ->get();
