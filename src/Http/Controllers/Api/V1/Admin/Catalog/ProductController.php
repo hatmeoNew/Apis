@@ -297,10 +297,6 @@ class ProductController extends CatalogController
         $skus = $request->input('tableData');
 
         $categories = $request->input('categories');
-
-       
-
-
         // $categories[] = 5;
 
         $Variants = [];
@@ -348,7 +344,8 @@ class ProductController extends CatalogController
             if($option3) $Variant[$option3] = $this->findAttributeOptionID($option3, $sku['option3']);
             
             if(empty($sku['id'])) {
-                $Variant['sku'] = $input['sku'].'-'. $sku['sku'];
+                //$Variant['sku'] = $input['sku'].'-'. $sku['sku'];
+                $Variant['sku'] = $sku['sku'];
                 $Variants["variant_".$i] = $Variant;
                 $i++;
             }else{
