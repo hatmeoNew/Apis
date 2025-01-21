@@ -47,6 +47,8 @@ Route::controller(ChannelController::class)->prefix('channels')->group(function 
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
+
+    Route::get('by-url/{url}', 'getChannelByUrl');
 });
 
 /**

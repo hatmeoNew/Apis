@@ -4,6 +4,7 @@ namespace NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Core;
 
 use Webkul\Core\Repositories\ChannelRepository;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Shop\Core\ChannelResource;
+use Webkul\Core\Models\Channel;
 
 class ChannelController extends CoreController
 {
@@ -29,5 +30,20 @@ class ChannelController extends CoreController
     public function resource(): string
     {
         return ChannelResource::class;
+    }
+
+    /**
+     * Get the Channel By URL.
+     */
+    public function getChannelByUrl($url){
+        $channel = Channel::where('hostname', $url)->first();
+
+        if (!$channel) {
+            return response()->json([
+                'message' => 'Channel not found',
+                'status' => '404'
+            ], 404);
+        }
+        return new ChannelResource($channel);
     }
 }
