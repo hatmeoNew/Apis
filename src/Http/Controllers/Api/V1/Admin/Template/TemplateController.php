@@ -228,8 +228,7 @@ class TemplateController extends Controller
 
 
     public function templateContent($id)
-    {
-
+    {       
         $template = DB::table('site_config')->where('template_id',$id)->first();
 
         if($template){
@@ -240,10 +239,12 @@ class TemplateController extends Controller
             $template->recommend = json_decode($template->recommend);
 
 
-            return response()->json(['message' => 'Template found','code'=>200,'data'=>$template]);
+            
         }else{
-            return response()->json(['message' => 'Template not found','code'=>202]);
+            $template = [];
         }
+
+        return response()->json(['message' => 'Template found','code'=>200,'data'=>$template]);
 
     }
 
