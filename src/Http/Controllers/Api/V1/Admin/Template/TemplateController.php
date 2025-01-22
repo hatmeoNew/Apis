@@ -22,7 +22,7 @@ class TemplateController extends Controller
 
     // 查询数据并应用分页
     $templates = DB::table('template')
-        ->select('id', 'template_name', 'template_link','des')
+        ->select('id', 'template_name', 'template_link','des','template_banner')
         ->offset($offset)
         ->limit($limit)
         ->get();
@@ -105,6 +105,9 @@ class TemplateController extends Controller
             ]);
 
             if($template){
+
+                // check the site_config table for the template_id
+                // get the template last inserted id
                 return response()->json(['message' => 'Template updated successfully','code'=>200]);
             }else{
                 return response()->json(['message' => 'Template not updated','code'=>202]);
@@ -112,7 +115,7 @@ class TemplateController extends Controller
 
         }else{
 
-            $template = DB::table('template')->insert([
+            $template = DB::table('template')->insertGetId([
                 'template_name' => $template_name,
                 'template_link' => $template_link,
                 'des' => $des,
@@ -121,6 +124,21 @@ class TemplateController extends Controller
             ]);
 
             if($template){
+                // get the template last inserted id
+
+                $site_config = DB::table('site_config')->where('template_id',$template)->first();
+                if(is_null($site_config)){
+                    $site_config = DB::table('site_config')->insert([
+                        'template_id' => $template,
+                        'site_logo' => '',
+                        'site_ico' => '',
+                        'home_banner' => null,
+                        'recommend' => null,
+                        'template_banner' => null,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
                 return response()->json(['message' => 'Template added successfully','code'=>200]);
             }else{
                 return response()->json(['message' => 'Template not added','code'=>202]);
@@ -145,9 +163,6 @@ class TemplateController extends Controller
         // $list = DB::table('cms_page_translations')->where('locale',$locale)->select('id','page_title','url_key','html_content','locale')->get();
 
        $list = DB::table('cms_page_translations')->where('id',$id)->select('id','page_title','url_key','html_content','locale')->get()->toArray();
-       
-
-        // var_dump($id);exit;
 
        return $list;
     }
@@ -181,14 +196,6 @@ class TemplateController extends Controller
     }
 
 
-    /**
-     * 
-     * edit the template content
-     * 
-     * @param Request $request
-     * 
-     * 
-     */
     public function editTemplateContent(Request $request)
     {
 
@@ -204,8 +211,6 @@ class TemplateController extends Controller
         $home_banner = $request->home_banner;
         $recommend = $request->recommend;
 
-        $template_banner = $request->template_banner;
-
 
         $home_banner = json_encode($home_banner);
         $recommend = json_encode($recommend);
@@ -215,7 +220,6 @@ class TemplateController extends Controller
             'site_ico' => $site_ico,
             'home_banner' => $home_banner,
             'recommend' => $recommend,
-            'template_banner' => $template_banner,
             'created_at' => now()
         ]);
 
@@ -228,28 +232,33 @@ class TemplateController extends Controller
 
 
     public function templateContent($id)
-    {       
+    {
+       
         $template = DB::table('site_config')->where('template_id',$id)->first();
 
         if($template){
 
             $template->home_banner = json_decode($template->home_banner);
-            $template->template_banner = isset($template->template_banner) ? $template->template_banner : '';
+            $template->template_banner = $template->template_banner;
 
             $template->recommend = json_decode($template->recommend);
 
 
-            
+            return response()->json(['message' => 'Template found','code'=>200,'data'=>$template]);
         }else{
-            $template = [];
+            return response()->json(['message' => 'Template not found','code'=>202]);
         }
-
-        return response()->json(['message' => 'Template found','code'=>200,'data'=>$template]);
 
     }
 
+
+
+
     public function productInfo(Request $request)
     {
+
+      
+      
 
     }
 
