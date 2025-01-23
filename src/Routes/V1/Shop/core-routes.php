@@ -12,11 +12,11 @@ use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Core\ThemeController;
 /**
  * Core configs.
  */
-Route::controller(CoreController::class)->prefix('core-configs')->group(function () {
+Route::controller(CoreController::class)->prefix('core-configs')->middleware('cache.response')->group(function () {
     Route::get('', 'getCoreConfigs');
 });
 
-Route::controller(CoreController::class)->prefix('core-config-fields')->group(function () {
+Route::controller(CoreController::class)->prefix('core-config-fields')->middleware('cache.response')->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
@@ -25,7 +25,7 @@ Route::controller(CoreController::class)->prefix('core-config-fields')->group(fu
 /**
  * Locale routes.
  */
-Route::controller(LocaleController::class)->prefix('locales')->group(function () {
+Route::controller(LocaleController::class)->prefix('locales')->middleware('cache.response')->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
@@ -34,7 +34,7 @@ Route::controller(LocaleController::class)->prefix('locales')->group(function ()
 /**
  * Currency routes.
  */
-Route::controller(CurrencyController::class)->prefix('currencies')->group(function () {
+Route::controller(CurrencyController::class)->prefix('currencies')->middleware('cache.response')->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
@@ -43,7 +43,7 @@ Route::controller(CurrencyController::class)->prefix('currencies')->group(functi
 /**
  * Channel routes.
  */
-Route::controller(ChannelController::class)->prefix('channels')->group(function () {
+Route::controller(ChannelController::class)->prefix('channels')->middleware('cache.response')->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
@@ -54,7 +54,7 @@ Route::controller(ChannelController::class)->prefix('channels')->group(function 
 /**
  * Country routes.
  */
-Route::controller(CountryController::class)->prefix('countries')->group(function () {
+Route::controller(CountryController::class)->prefix('countries')->middleware('cache.response')->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
@@ -63,14 +63,14 @@ Route::controller(CountryController::class)->prefix('countries')->group(function
 
 });
 
-Route::controller(CountryStateController::class)->prefix('countries-states')->group(function () {
+Route::controller(CountryStateController::class)->prefix('countries-states')->middleware('cache.response')->group(function () {
     Route::get('', 'allResources');
 });
 
 /**
  * Theme routes.
  */
-Route::controller(ThemeController::class)->prefix('theme/customizations')->group(function () {
+Route::controller(ThemeController::class)->prefix('theme/customizations')->middleware('cache.response')->group(function () {
     Route::get('', 'getThemeCustomizations');
 
     Route::get('{id}', 'getResource');

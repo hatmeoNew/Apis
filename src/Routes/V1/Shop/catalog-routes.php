@@ -10,7 +10,7 @@ use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Catalog\ProductReviewControll
 /**
  * Product routes.
  */
-Route::controller(ProductController::class)->prefix('products')->group(function () {
+Route::controller(ProductController::class)->prefix('products')->middleware('cache.response')->group(function () {
 
     Route::get('get-index/{template_id}', 'getIndexContent');
     Route::get('get-recommend/{product_id}', 'getRecommend');
@@ -39,7 +39,7 @@ Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function ()
 /**
  * Category routes.
  */
-Route::controller(CategoryController::class)->prefix('categories')->group(function () {
+Route::controller(CategoryController::class)->prefix('categories')->middleware('cache.response')->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
@@ -52,14 +52,14 @@ Route::controller(CategoryController::class)->prefix('categories')->group(functi
 /**
  * descendant category routes.
  */
-Route::controller(CategoryController::class)->prefix('descendant-categories')->group(function () {
+Route::controller(CategoryController::class)->prefix('descendant-categories')->middleware('cache.response')->group(function () {
     Route::get('', 'descendantCategories');
 });
 
 /**
  * Attribute routes.
  */
-Route::controller(AttributeController::class)->prefix('attributes')->group(function () {
+Route::controller(AttributeController::class)->prefix('attributes')->middleware('cache.response')->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
@@ -68,7 +68,7 @@ Route::controller(AttributeController::class)->prefix('attributes')->group(funct
 /**
  * Attribute family routes.
  */
-Route::controller(AttributeFamilyController::class)->prefix('attribute-families')->group(function () {
+Route::controller(AttributeFamilyController::class)->prefix('attribute-families')->middleware('cache.response')->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');

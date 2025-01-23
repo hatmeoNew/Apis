@@ -39,9 +39,7 @@ class ProductReviewImport implements ToModel, WithHeadingRow, WithValidation {
 
         }
 
-        Log::info('Product Review Import: ' . json_encode($row));
-
-
+        #Log::info('Product Review Import: ' . json_encode($row));
 
         // Create a new Product Review
         $productReview = new ProductReview([
