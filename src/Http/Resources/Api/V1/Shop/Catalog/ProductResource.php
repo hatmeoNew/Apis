@@ -51,6 +51,7 @@ class ProductResource extends JsonResource
             'name'               => $product->name,
             'url_key'            => $product->url_key,
             'price'              => core()->convertPrice($productTypeInstance->getMinimalPrice()),
+            'compare_at_price'   => isset($product->compare_at_price) ? core()->convertPrice($product->compare_at_price) : null,
             'formatted_price'    => core()->currency($productTypeInstance->getMinimalPrice()),
             'short_description'  => $product->short_description,
             'description'        => $product->description,
