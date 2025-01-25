@@ -107,6 +107,8 @@ class CartController extends CustomerController
             }
         }
 
+        Cart::collectTotals();
+
         return response()->json([
             'data'    => app()->make($this->resource(), ['resource' => Cart::getCart()]),
             'message' => trans('Apis::app.shop.checkout.cart.item.success'),
