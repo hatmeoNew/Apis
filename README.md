@@ -50,4 +50,4 @@ Bug Report
 
 # License
 ------------
-`NexaMerchant Apis` is licensed under [The MIT License (MIT)](LICENSE).
+`NexaMerchant Apis` is licensed under [The MIT License (MIT)](LICENSE.md).
