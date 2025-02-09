@@ -114,8 +114,9 @@ class ProductController extends CatalogController
                 foreach($config_info as $key => $value){
                     $config_info[$key]['home_banner'] = json_decode($value['home_banner'], true);
                     $config_info[$key]['template_banner'] = isset($value['template_banner']) ? $value['template_banner'] : '';
+                    $config = isset($value['config']) ? json_decode($value['config'], true) : [];
+                    $config_info[$key]['config'] = $config;
                     $recommend = json_decode($value['recommend'], true);
-
 
                         // print_r($recommend);exit;
 
@@ -169,8 +170,15 @@ class ProductController extends CatalogController
 
     }
 
-
-
+    /**
+     * 
+     * Recommend product by product id
+     * 
+     * @param int $product_id
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     */
     public function getRecommend($product_id)
     {  
 
@@ -178,13 +186,7 @@ class ProductController extends CatalogController
         $category_id = DB::table('product_categories')->where('product_id', $product_id)->value('category_id');
 
         if(!empty($category_id)){
-       
-
-
             $product_ids = DB::table('product_categories')->where('category_id', $category_id)->where('product_id','<>', $product_id)->select('product_id')->get()->toArray();
-       
-
-
             if(!empty($product_ids)){
                 $product_ids =  json_decode(json_encode($product_ids), true);
                 $product_ids = array_column($product_ids, 'product_id');
@@ -201,6 +203,7 @@ class ProductController extends CatalogController
 
                     foreach($product_list as $key => $value){
                         $product_list[$key]['image'] = DB::table('product_images')->where('product_id', $value['product_id'])->value('path');
+                        $product_list[$key]['format_price'] = core()->currency($value['price']);
                     }
 
 
