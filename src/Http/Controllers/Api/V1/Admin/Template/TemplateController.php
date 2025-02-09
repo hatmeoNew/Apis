@@ -8,6 +8,21 @@ use Illuminate\Http\Request;
 
 class TemplateController extends Controller
 {
+
+    /**
+     * @var array
+     */
+    private $config = [
+        'welcome' => [
+            'type' => 'text',
+            'value' => '',
+        ],
+        'images' => [
+            'type' => 'image',
+            'value' => '',
+        ],
+    ];
+
     /**
      * Resource class name.
      */
@@ -76,8 +91,11 @@ class TemplateController extends Controller
     
     }
 
-
-
+    /**
+     * 
+     * Add Template
+     * 
+     */
     public function addTemplate(Request $request)
     {
 
@@ -135,6 +153,7 @@ class TemplateController extends Controller
                         'home_banner' => null,
                         'recommend' => null,
                         'template_banner' => null,
+                        'config' => json_encode($this->config),
                         'created_at' => now(),
                         'updated_at' => now()
                     ]);
@@ -201,7 +220,6 @@ class TemplateController extends Controller
 
         // echo 123;exit;
         $request->validate([
-        
             'template_id'=>'required'
         ]);
 
@@ -210,6 +228,7 @@ class TemplateController extends Controller
         $site_ico = $request->site_ico;
         $home_banner = $request->home_banner;
         $recommend = $request->recommend;
+        $config = $request->config;
 
 
         $home_banner = json_encode($home_banner);
@@ -220,6 +239,7 @@ class TemplateController extends Controller
             'site_ico' => $site_ico,
             'home_banner' => $home_banner,
             'recommend' => $recommend,
+            'config' => $config,
             'created_at' => now()
         ]);
 
@@ -242,6 +262,17 @@ class TemplateController extends Controller
             $template->template_banner = $template->template_banner;
 
             $template->recommend = json_decode($template->recommend);
+
+            // the template config need mapp the $this->config data
+            
+            // Decode the template config
+            $templateConfig = json_decode($template->config, true);
+
+            // Merge the template config with $this->config, giving priority to $this->config
+            $mergedConfig = array_merge($templateConfig, $this->config);
+
+            // Encode the merged config back to JSON
+            $template->config = $mergedConfig;
 
 
             return response()->json(['message' => 'Template found','code'=>200,'data'=>$template]);
