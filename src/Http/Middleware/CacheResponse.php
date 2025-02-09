@@ -16,7 +16,7 @@ class CacheResponse
      */
     public function handle($request, Closure $next)
     {
-        $cacheKey = 'api_cache_' . md5($request->fullUrl());
+        $cacheKey = 'api_cache_' . md5($request->fullUrl().$request->ip());
 
         $cleanCache = $request->input('clean-cache');
 
