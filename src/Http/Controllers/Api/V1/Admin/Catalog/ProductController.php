@@ -371,6 +371,9 @@ class ProductController extends CatalogController
         $tableData['inventories'][1] = 1000;
         $tableData['product_number'] = 10000;
         $tableData['categories'] = $categories;
+        $tableData['meta_title'] = $req['meta_title'];
+        $tableData['meta_keywords'] = $req['meta_keywords'];
+        $tableData['meta_description'] = $req['meta_description'];
        
         Log::info("quick-create-product: ".json_encode($tableData));
 
