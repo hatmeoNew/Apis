@@ -17,6 +17,7 @@ class OrderResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'name'                                => config('shopify.order_pre').'#'.$this->id,
             'id'                                  => $this->id,
             'increment_id'                        => $this->increment_id,
             'status'                              => $this->status,
