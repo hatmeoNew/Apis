@@ -43,10 +43,42 @@ class TinyMCEController extends AdminController
             return [];
         }
 
+        $file = request()->file('file');
+        $path = $file->store($this->storagePath);
+        $file_name = $file->getClientOriginalName();
+
+        // when the file is image, we will convert it to webp and save webp file.
+        if (in_array($file->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif'])) {
+            $path = $this->convertToWebp($path);
+        }
+
+        return [
+            'file'      => $path,
+            'file_name' => $file_name,
+            'file_url'  => Storage::url($path),
+        ];
+
+
         return [
             'file'      => $path = request()->file('file')->store($this->storagePath),
             'file_name' => request()->file('file')->getClientOriginalName(),
             'file_url'  => Storage::url($path),
         ];
+    }
+
+    /**
+     * Convert image to webp.
+     *
+     * @param string $path
+     * @return string
+     */
+    public function convertToWebp($path)
+    {
+        $image = \Image::make(Storage::path($path));
+        $image->encode('webp', 75);
+        $path = str_replace($image->extension, 'webp', $path);
+        $image->save(Storage::path($path));
+
+        return $path;
     }
 }
