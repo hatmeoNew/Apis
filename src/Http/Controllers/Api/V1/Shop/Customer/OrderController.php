@@ -5,6 +5,8 @@ namespace NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Customer;
 use Illuminate\Http\Request;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Shop\Sales\OrderResource;
 use Webkul\Sales\Repositories\OrderRepository;
+use Illuminate\Support\Facades\Crypt;
+use Carbon\Carbon;
 
 class OrderController extends CustomerController
 {
@@ -50,6 +52,41 @@ class OrderController extends CustomerController
 
         return response([
             'message' => trans('Apis::app.shop.sales.orders.error.cancel-error'),
+        ]);
+    }
+
+    /**
+     * Get the guest order info.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * 
+     * @param  string  $key
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function guestOrderInfo($key, Request $request)
+    {
+        try {
+            $decryptedData = json_decode(Crypt::decrypt($key), true);
+
+            if (!isset($decryptedData['id']) || !isset($decryptedData['expiry'])) {
+                return response()->json(['message' => 'Invalid key format.'], 400);
+            }
+
+            $id = $decryptedData['id'];
+            $expiry = Carbon::parse($decryptedData['expiry']);
+
+            if ($expiry->isPast()) {
+                return response()->json(['message' => 'Key has expired.'], 400);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Invalid key.'], 400);
+        }
+
+        $order = $this->getRepositoryInstance()->findOrFail($id);
+
+        return response()->json([
+            'data' => $order,
         ]);
     }
 }
