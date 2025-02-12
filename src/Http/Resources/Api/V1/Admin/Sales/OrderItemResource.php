@@ -29,6 +29,8 @@ class OrderItemResource extends JsonResource
             'qty_shipped'                        => $this->qty_shipped,
             'qty_refunded'                       => $this->qty_refunded,
             'price'                              => $this->price,
+            // get images first
+            'images'                             => $this->product->images()->first(),
             'formatted_price'                    => core()->formatPrice($this->price, $this->order->order_currency_code),
             'base_price'                         => $this->base_price,
             'formatted_base_price'               => core()->formatBasePrice($this->base_price),
