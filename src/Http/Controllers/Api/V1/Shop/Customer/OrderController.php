@@ -66,23 +66,23 @@ class OrderController extends CustomerController
      */
     public function guestOrderInfo($key, Request $request)
     {
-        // try {
-        //     $decryptedData = json_decode(Crypt::decrypt($key), true);
+        try {
+            $decryptedData = json_decode(Crypt::decrypt($key), true);
 
-        //     if (!isset($decryptedData['id']) || !isset($decryptedData['expiry'])) {
-        //         return response()->json(['message' => 'Invalid key format.'], 400);
-        //     }
+            if (!isset($decryptedData['id']) || !isset($decryptedData['expiry'])) {
+                return response()->json(['message' => 'Invalid key format.'], 400);
+            }
 
-        //     $id = $decryptedData['id'];
-        //     $expiry = Carbon::parse($decryptedData['expiry']);
+            $id = $decryptedData['id'];
+            $expiry = Carbon::parse($decryptedData['expiry']);
 
-        //     if ($expiry->isPast()) {
-        //         return response()->json(['message' => 'Key has expired.'], 400);
-        //     }
-        // } catch (\Exception $e) {
-        //     return response()->json(['message' => 'Invalid key.'], 400);
-        // }
-        $id = $key;
+            if ($expiry->isPast()) {
+                return response()->json(['message' => 'Key has expired.'], 400);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Invalid key.'], 400);
+        }
+        
 
         $order = $this->getRepositoryInstance()->findOrFail($id);
 
