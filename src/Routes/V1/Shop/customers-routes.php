@@ -29,7 +29,16 @@ Route::controller(AuthController::class)->prefix('customer')->group(function () 
 
     // Get Guest Token
     Route::post('guest-token', 'getGuestToken');
+
+    
 });
+
+// Get Guest Order info
+Route::controller(OrderController::class)->prefix('customer/orders')->group(function () {
+    Route::get('guest-order-info/{key}', 'guestOrderInfo');
+});
+
+
 
 /**
  * Customer authorized routes.
@@ -68,6 +77,9 @@ Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function ()
         Route::get('', 'allResources');
 
         Route::get('{id}', 'getResource');
+
+        // guest view order info
+        //Route::get('guest/{key}', 'guestOrderInfo');
 
         Route::post('{id}/cancel', 'cancel');
     });
