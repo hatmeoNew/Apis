@@ -181,4 +181,47 @@ class OrderController
     public function cancel()
     {
     }
+
+    /**
+     * @OA\Get(
+     *      path="/api/v1/customer/orders/guest-order-info/{key}",
+     *      operationId="getGuestOrderInfo",
+     *      tags={"Orders"},
+     *      summary="Get guest order info",
+     *      description="Get guest order info",
+     *
+     *      @OA\Parameter(
+     *          name="key",
+     *          description="Key",
+     *          required=true,
+     *          in="path",
+     *
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *
+     *          @OA\JsonContent(
+     *
+     *              @OA\Property(
+     *                  property="data",
+     *                  type="object",
+     *                  ref="#/components/schemas/Order"
+     *              )
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
+     */
+    public function guestOrderInfo()
+    {
+    }
 }
