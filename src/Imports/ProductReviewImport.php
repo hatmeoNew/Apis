@@ -49,6 +49,7 @@ class ProductReviewImport implements ToModel, WithHeadingRow, WithValidation {
             'title'         => $row['title'],
             'rating'        => $row['rating'],
             'comment'       => $row['comment'] ?? '',
+            'sort'          => isset($row['sort']) ? $row['sort'] : 0,
             'status'        => 'pending', // default pending
             'sort'          => 0,
         ]);
