@@ -28,7 +28,7 @@ class CacheResponse
 
         $response = $next($request);
 
-        Cache::put($cacheKey, $response->getContent(), 24*3600); // Cache for 1 day
+        Cache::put($cacheKey, $response->getContent(), 30*24*3600); // Cache for 1 day
 
         return $response;
     }
