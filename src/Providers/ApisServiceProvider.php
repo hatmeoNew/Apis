@@ -117,6 +117,7 @@ class ApisServiceProvider extends ServiceProvider
                 \NexaMerchant\Apis\Console\Commands\Install::class,
                 \NexaMerchant\Apis\Console\Commands\UnInstall::class,
                 \NexaMerchant\Apis\Console\Commands\GenerateApiDocs::class,
+                \NexaMerchant\Apis\Console\Commands\TestEmail::class,
             ]);
         }
     }

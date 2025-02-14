@@ -4,6 +4,7 @@ namespace NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Catalog;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use NexaMerchant\Apis\Docs\V1\Admin\Models\Catalog\Product;
 use Webkul\Product\Repositories\ProductRepository;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Shop\Catalog\ProductResource;
 
@@ -31,6 +32,14 @@ class ProductController extends CatalogController
     public function resource(): string
     {
         return ProductResource::class;
+    }
+
+    public function slug($slug)
+    {
+
+        $product = $this->getRepositoryInstance()->findBySlug($slug);
+
+        return ProductResource::make($product);
     }
 
     /**

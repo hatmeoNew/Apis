@@ -73,6 +73,9 @@ class ProductResource extends JsonResource
             'in_stock'              => $product->haveSufficientQuantity(1),
             'is_saved'              => false,
             'is_item_in_cart'       => Cart::hasProduct($product),
+            'packages' => \Nicelizhi\OneBuy\Helpers\Utils::makeProducts($product, [2,1,3,4]),
+            'crm_channel' => config('onebuy.gtag'),
+            'gtag' => config('onebuy.gtag'),
             'show_quantity_changer' => $this->when(
                 $product->type !== 'grouped',
                 $product->getTypeInstance()->showQuantityBox()
@@ -88,6 +91,8 @@ class ProductResource extends JsonResource
             $this->mergeWhen($productTypeInstance->isComposite(), [
                 'super_attributes' => AttributeResource::collection($product->super_attributes),
             ]),
+
+            
         ];
     }
 

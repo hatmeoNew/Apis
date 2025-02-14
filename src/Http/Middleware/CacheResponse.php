@@ -16,7 +16,7 @@ class CacheResponse
      */
     public function handle($request, Closure $next)
     {
-        $cacheKey = 'api_cache_' . md5($request->fullUrl().$request->ip());
+        $cacheKey = 'api_cache_' . md5($request->fullUrl());
 
         $cleanCache = $request->input('clean-cache');
 
@@ -28,7 +28,7 @@ class CacheResponse
 
         $response = $next($request);
 
-        Cache::put($cacheKey, $response->getContent(), 3600); // Cache for 1 hour
+        Cache::put($cacheKey, $response->getContent(), 24*3600); // Cache for 1 day
 
         return $response;
     }

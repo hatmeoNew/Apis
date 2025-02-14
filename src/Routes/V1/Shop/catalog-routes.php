@@ -19,6 +19,8 @@ Route::controller(ProductController::class)->prefix('products')->middleware('cac
 
     Route::get('/{id}', 'getResource');
 
+    Route::get('{slug}/slug', 'slug');
+
     Route::get('{id}/additional-information', 'additionalInformation');
 
     Route::get('{id}/configurable-config', 'configurableConfig');
