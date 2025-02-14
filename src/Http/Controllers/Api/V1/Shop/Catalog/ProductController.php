@@ -38,6 +38,9 @@ class ProductController extends CatalogController
     {
 
         $product = $this->getRepositoryInstance()->findBySlug($slug);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found', 'code' => 202, 'data' => []]);
+        }
 
         return ProductResource::make($product);
     }
