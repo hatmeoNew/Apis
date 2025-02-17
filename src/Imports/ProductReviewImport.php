@@ -10,7 +10,7 @@ use Webkul\Product\Models\Product;
 use Webkul\Product\Models\ProductReview;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-class ProductReviewImport implements ToModel, WithHeadingRow, WithValidation {
+class ProductReviewImport implements ToModel, WithHeadingRow {
     public function model(array $row)
     {
         // Find the product by SKU
@@ -19,6 +19,10 @@ class ProductReviewImport implements ToModel, WithHeadingRow, WithValidation {
         if (!$product) {
             // Skip if product not found
             return null;
+        }
+
+        if(empty($row['customer_email'])) {
+            return false;
         }
 
         // check the customer email have create a customer or not

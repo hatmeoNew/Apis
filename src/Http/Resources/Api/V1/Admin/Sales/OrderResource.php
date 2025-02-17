@@ -99,7 +99,7 @@ class OrderResource extends JsonResource
             'formatted_shipping_refunded'         => core()->formatPrice($this->shipping_refunded, $this->order_currency_code),
             'base_shipping_refunded'              => $this->base_shipping_refunded,
             'formatted_base_shipping_refunded'    => core()->formatBasePrice($this->base_shipping_refunded),
-            'customer'                            => $this->when($this->customer_id, new CustomerResource($this->customer)),
+            //'customer'                            => $this->when($this->customer_id, new CustomerResource($this->customer)),
             'channel'                             => $this->when($this->channel_id, new ChannelResource($this->channel)),
             'shipping_address'                    => new OrderAddressResource($this->shipping_address),
             'billing_address'                     => new OrderAddressResource($this->billing_address),

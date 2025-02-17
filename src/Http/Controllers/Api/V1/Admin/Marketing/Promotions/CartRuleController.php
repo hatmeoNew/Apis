@@ -357,7 +357,7 @@ class CartRuleController extends MarketingController
                     "attribute_type" => "integer",
                     'value' => $attribute['value'],
                 ];
-                if($attribute['attribute'] == 'cart_item|quantity'){
+                if($attribute['attribute'] == 'cart|items_qty'){
                     $qty = $attribute['value'];
                 }
             }
@@ -374,14 +374,16 @@ class CartRuleController extends MarketingController
 
             $id = $rule['id'];
 
-            // Log::info('Product Price: '.$product_price);
-            // Log::info('Qty: '.$qty);
-            // Log::info('status: '.$status);
-            // Log::info('ID: '.$id);
+
 
             $cartRuleData['discount_amount'] = $discount_amount;
             $cartRuleData['status'] = $status;
             $cartRuleData['discount_quantity'] = $qty;
+
+            //var_dump($cartRuleData);
+            // return response()->json([
+            //     'data' => $cartRuleData
+            // ]);
                         
             if($id > 0) {
 
@@ -420,6 +422,7 @@ class CartRuleController extends MarketingController
         Cache::forget("product_ext_".$product->id."_4_".$currency);
 
         return response([
+            'data' => $rules,
             'message' => trans('Apis::app.admin.marketing.promotions.cart-rules.create-success'),
         ]);
 

@@ -341,6 +341,12 @@ class CartController extends CustomerController
         //$last_order_id = "ddddd";
         $force = $request->input("force");
 
+        $cart_id = isset($input['cart_id']) ? trim($input['cart_id']) : "";
+        if($cart_id) {
+            $cart = $this->cartRepository->find($cart_id);
+            Cart::setCart($cart);
+        }
+
         Log::info("last order id " . $last_order_id);
 
         if(!empty($last_order_id) && $force !="1") {
@@ -750,6 +756,11 @@ class CartController extends CustomerController
 
         $payment_method_input = $request->input('payment_method');
         $refer = isset($input['refer']) ? trim($input['refer']) : "";
+        $cart_id = isset($input['cart_id']) ? trim($input['cart_id']) : "";
+        if($cart_id) {
+            $cart = $this->cartRepository->find($cart_id);
+            Cart::setCart($cart);
+        }
 
         $addressData['billing'] = [];
         $address1 = [];

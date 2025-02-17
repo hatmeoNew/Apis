@@ -42,6 +42,11 @@ class ProductResource extends JsonResource
         /* get type instance */
         $productTypeInstance = $product->getTypeInstance();
 
+        $packages_package = [];
+        if($product->type == 'configurable') {
+            $packages_package = \Nicelizhi\OneBuy\Helpers\Utils::makeProducts($product, [2,1,3,4]);
+        }
+
         /* generating resource */
         return [
             /* product's information */
@@ -73,7 +78,7 @@ class ProductResource extends JsonResource
             'in_stock'              => $product->haveSufficientQuantity(1),
             'is_saved'              => false,
             'is_item_in_cart'       => Cart::hasProduct($product),
-            'packages' => \Nicelizhi\OneBuy\Helpers\Utils::makeProducts($product, [2,1,3,4]),
+            'package_products' => $packages_package,
             'crm_channel' => config('onebuy.gtag'),
             'gtag' => config('onebuy.gtag'),
             'show_quantity_changer' => $this->when(
