@@ -108,6 +108,8 @@ class ChannelController extends SettingController
             $locale.'.footer_content'      => 'nullable',
             'logo.*'                       => 'nullable|mimes:bmp,jpeg,jpg,png,webp',
             'favicon.*'                    => 'nullable|mimes:bmp,jpeg,jpg,png,webp',
+            'logo_url'                     => 'nullable',
+            'favicon_url'                  => 'nullable',
 
             /* seo */
             $locale.'.seo_title'       => 'nullable',
@@ -119,6 +121,8 @@ class ChannelController extends SettingController
             $locale.'.maintenance_mode_text'   => 'nullable',
             'allowed_ips'                      => 'nullable',
         ]);
+
+        //var_dump($data);exit;
 
         $data['is_maintenance_on'] = request()->input('is_maintenance_on') == '1';
 
