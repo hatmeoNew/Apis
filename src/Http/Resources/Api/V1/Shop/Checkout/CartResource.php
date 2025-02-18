@@ -66,6 +66,7 @@ class CartResource extends JsonResource
             'shipping_address'                    => new CartAddressResource($this->shipping_address),
             'created_at'                          => $this->created_at,
             'updated_at'                          => $this->updated_at,
+            'currency_symbol'                     => core()->currencySymbol($this->cart_currency_code),
             'taxes'                               => json_encode($taxes, JSON_FORCE_OBJECT),
             'formatted_taxes'                     => json_encode($formattedTaxes, JSON_FORCE_OBJECT),
             'base_taxes'                          => json_encode($baseTaxes, JSON_FORCE_OBJECT),
