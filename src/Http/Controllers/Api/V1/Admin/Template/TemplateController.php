@@ -229,6 +229,7 @@ class TemplateController extends Controller
         $home_banner = $request->home_banner;
         $recommend = $request->recommend;
         $config = $request->config;
+        $template_banner = $request->template_banner;
 
 
         $home_banner = json_encode($home_banner);
@@ -242,6 +243,14 @@ class TemplateController extends Controller
             'config' => $config,
             'created_at' => now()
         ]);
+
+        // update $template_banner to the template table
+        if($template_banner) {
+            $template = DB::table('template')->where('id',$id)->update([
+                'template_banner' => $template_banner,
+                'updated_at' => now()
+            ]);
+        }
 
         if($template){
             return response()->json(['message' => 'Template updated successfully','code'=>200]);
