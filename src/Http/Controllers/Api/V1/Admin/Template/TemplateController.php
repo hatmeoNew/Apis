@@ -241,6 +241,7 @@ class TemplateController extends Controller
             'home_banner' => $home_banner,
             'recommend' => $recommend,
             'config' => $config,
+            'template_banner' => $template_banner,
             'created_at' => now()
         ]);
 
