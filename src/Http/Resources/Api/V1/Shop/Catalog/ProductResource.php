@@ -79,7 +79,7 @@ class ProductResource extends JsonResource
             'is_saved'              => false,
             'is_item_in_cart'       => Cart::hasProduct($product),
             'package_products' => $packages_package,
-            'crm_channel' => config('onebuy.gtag'),
+            'crm_channel' => config('onebuy.crm_channel'),
             'gtag' => config('onebuy.gtag'),
             'show_quantity_changer' => $this->when(
                 $product->type !== 'grouped',

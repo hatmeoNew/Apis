@@ -265,14 +265,14 @@ class TemplateController extends Controller
 
             // the template config need mapp the $this->config data
             
-            // Decode the template config
-            $templateConfig = json_decode($template->config, true);
+            // // Decode the template config
+            // $templateConfig = json_decode($template->config, true);
 
-            // Merge the template config with $this->config, giving priority to $this->config
-            $mergedConfig = array_merge($templateConfig, $this->config);
+            // // Merge the template config with $this->config, giving priority to $this->config
+            // $mergedConfig = array_merge($templateConfig, $this->config);
 
-            // Encode the merged config back to JSON
-            $template->config = $mergedConfig;
+            // // Encode the merged config back to JSON
+            // $template->config = $mergedConfig;
 
 
             return response()->json(['message' => 'Template found','code'=>200,'data'=>$template]);
