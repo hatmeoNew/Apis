@@ -377,7 +377,7 @@ class ProductController extends CatalogController
         $tableData['meta_keywords'] = $req['meta_keywords'];
         $tableData['meta_description'] = $req['meta_description'];
        
-        Log::info("quick-create-product: ".json_encode($tableData));
+        //Log::info("quick-create-product: ".json_encode($tableData));
 
 
         // check the sku is exist and update the product
