@@ -6,6 +6,7 @@ use Nicelizhi\Manage\Http\Requests\ConfigurationForm;
 use Webkul\Core\Repositories\CoreConfigRepository;
 use Webkul\Core\Tree;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\AdminController;
+use Illuminate\Support\Facades\Event;
 
 class ConfigurationController extends AdminController
 {
@@ -75,19 +76,28 @@ class ConfigurationController extends AdminController
 
         $items = $request->input("items");
 
+        Event::dispatch('core.configuration.save.before');
+
         foreach ($items as $key => $item) {
             //var_dump($key, $item);exit;
             // check the code is exists or not
             $config = $this->coreConfigRepository->findOneWhere([
                 'code'    => $key,
-                'channel_code' => $channel,
             ]);
             //var_dump($config);exit;
             if ($config) {
-                $config->update([
+                // $config->update([
+                //     'value' => $item,
+                // ]);
+                
+                // save the configuration data
+                $this->coreConfigRepository->update([
                     'value' => $item,
-                ]);
-                //core()->saveConfig($key, $item['value'], $channel, $locale);
+                ], $config->id);
+
+
+
+
                 continue;
             }
 
@@ -98,6 +108,8 @@ class ConfigurationController extends AdminController
             //     'channel' => $channel,
             // ]);
         }
+
+        Event::dispatch('core.configuration.save.after');
 
         return response([
             'message' => trans('Apis::app.admin.configuration.save-success')
