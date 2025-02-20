@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::table('site_config', function (Blueprint $table) {
             // add config json field
-            $table->json('config')->nullable()->after("recommend")->comment('config json field');
+            if (!Schema::hasColumn('site_config', 'config')) {
+                $table->json('config')->nullable()->after("recommend")->comment('config json field');
+            }
         });
     }
 
