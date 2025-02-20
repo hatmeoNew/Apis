@@ -35,8 +35,28 @@ class ConfigurationController extends AdminController
      */
     public function index()
     {
+        $items = $this->configTree->items;
+
+        // 递归查找并获取 value_key 对应的数据
+        $applyValueKey = function (&$nodes) use (&$applyValueKey) {
+            foreach ($nodes as &$node) {
+                if (isset($node['fields']) && is_array($node['fields'])) {
+                    foreach ($node['fields'] as &$field) {
+                        if (isset($field['value_key'])) {
+                            $field['value'] = core()->getConfigData($field['value_key']);
+                        }
+                    }
+                }
+                if (isset($node['children']) && !empty($node['children'])) {
+                    $applyValueKey($node['children']);
+                }
+            }
+        };
+
+        $applyValueKey($items);
+
         return response([
-            'data' => $this->configTree,
+            'data' => $items,
         ]);
     }
 
@@ -47,7 +67,44 @@ class ConfigurationController extends AdminController
      */
     public function store(ConfigurationForm $request)
     {
-        $coreConfigData = $this->coreConfigRepository->create($request->except(['_token', 'admin_locale']));
+
+        $items = $request->all();
+
+        $locale = $request->input('locale');
+        $channel = $request->input('channel');
+
+        $items = $request->input("items");
+
+        foreach ($items as $key => $item) {
+            //var_dump($key, $item);exit;
+            // check the code is exists or not
+            $config = $this->coreConfigRepository->findOneWhere([
+                'code'    => $key,
+                'channel_code' => $channel,
+            ]);
+            //var_dump($config);exit;
+            if ($config) {
+                $config->update([
+                    'value' => $item,
+                ]);
+                //core()->saveConfig($key, $item['value'], $channel, $locale);
+                continue;
+            }
+
+            // $this->coreConfigRepository->create([
+            //     'code'    => $key,
+            //     'value'   => $item['value'],
+            //     'locale'  => $locale,
+            //     'channel' => $channel,
+            // ]);
+        }
+
+        return response([
+            'message' => trans('Apis::app.admin.configuration.save-success')
+        ]);
+    
+
+        //$coreConfigData = $this->coreConfigRepository->create($request->except(['_token', 'admin_locale']));
 
         return response([
             'data'    => $coreConfigData,
@@ -63,7 +120,6 @@ class ConfigurationController extends AdminController
     private function prepareConfigTree()
     {
         $tree = Tree::create();
-
         foreach (config('core') as $item) {
             $tree->add($item);
         }
@@ -72,4 +128,22 @@ class ConfigurationController extends AdminController
 
         $this->configTree = $tree;
     }
+
+    public function get_value_keys($data) {
+        $value_keys = [];
+    
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                if ($key === 'value_key') {
+                    $value_keys[] = $value;
+                } elseif (is_array($value)) {
+                    $value_keys = array_merge($value_keys, $this->get_value_keys($value));
+                }
+            }
+        }
+    
+        return $value_keys;
+    }
+    
+    //$values = get_value_keys($data);
 }

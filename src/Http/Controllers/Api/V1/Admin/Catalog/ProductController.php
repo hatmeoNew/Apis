@@ -188,6 +188,8 @@ class ProductController extends CatalogController
 
             foreach ($attribute['values'] as $option) {
 
+                if(!$option) continue;
+
                 //var_dump($option);
 
                 // check if the attribute option is have in the attributeOptionItems
@@ -438,6 +440,21 @@ class ProductController extends CatalogController
         $attributeOptionRepository = app('Webkul\Attribute\Repositories\AttributeOptionRepository');
         $attributeOption = $attributeOptionRepository->findOneByField(['admin_name'=>$attribute_value, 'attribute_id'=>$attribute->id]);
         if($attributeOption){
+
+            // check the attribute_option_translations table
+            $attributeOptionTranslationRepository = app('Webkul\Attribute\Repositories\AttributeOptionTranslationRepository');
+            $locale = Core()->getCurrentLocale()->code;
+            $attributeOptionTranslation = $attributeOptionTranslationRepository->findOneByField(['label'=>$attribute_value, 'locale'=>$locale, 'attribute_option_id'=>$attributeOption->id]);
+            //echo $attributeOption->id;
+            if(!$attributeOptionTranslation){
+                $attributeOptionTranslation = $attributeOptionTranslationRepository->create([
+                    'label' => $attribute_value,
+                    'locale' => $locale,
+                    'attribute_option_id' => $attributeOption->id
+                ]);
+            }
+
+
             return $attributeOption->id;
         }
         return 0;
