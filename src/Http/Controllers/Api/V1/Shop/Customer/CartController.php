@@ -711,7 +711,11 @@ class CartController extends CustomerController
         $lineItems = [];
 
         foreach ($cart->items as $item) {
-            if(empty($item->name)) $item->name = "Product";
+            if(empty($item->name)) {
+                $item->name = "Product";
+            }else{
+                $item->name = mb_substr($item->name, 0, 50);
+            }
             $lineItems[] = [
                 'unit_amount' => [
                     'currency_code' => $cart->cart_currency_code,
