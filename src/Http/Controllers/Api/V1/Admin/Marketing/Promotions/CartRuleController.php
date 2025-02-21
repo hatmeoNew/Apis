@@ -351,6 +351,11 @@ class CartRuleController extends MarketingController
             ];
 
             foreach($rulesAttributes as $key=>$attribute){
+
+                if($attribute['attribute'] == 'product|attribute_family_id'){
+                    $attribute['value'] = $product->attribute_family_id;
+                }
+
                 $cartRuleData['conditions'][] = [
                     'attribute' => $attribute['attribute'],
                     'operator' => $attribute['operator'],
