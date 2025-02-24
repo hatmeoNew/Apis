@@ -67,10 +67,12 @@ class CartController extends CustomerController
     public function batchStore($productId, Request $request): JsonResponse
     {
 
-//        $products = $request->input('products');
+        if (request()->get('is_buy_now')) {
+            Cart::deActivateCart();
+        }
+
         $products = $request->input('items');
         $cart = Cart::getCart();
-//        var_dump($cart);exit;
         foreach ($products as $product_info) {
             $product = $this->productRepository->with('parent')->find($productId);
 
@@ -129,9 +131,7 @@ class CartController extends CustomerController
             if (request()->get('is_buy_now')) {
                 Cart::deActivateCart();
             }
-//            var_dump(request()->all());exit;
             $cart = Cart::addProduct($product->id, request()->all());
-//            var_dump($cart);exit;
             if (
                 is_array($cart)
                 && isset($cart['warning'])
