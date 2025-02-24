@@ -1,11 +1,9 @@
 <?php
-namespace NexaMerchant\Apps\Apis\Models;
+namespace NexaMerchant\Apis\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderUtm extends Model {
-    use HasFactory;
 
     protected $table = 'order_utm';
 
