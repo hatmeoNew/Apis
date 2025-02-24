@@ -335,10 +335,7 @@ class CartController extends CustomerController
     public function OrderAddrAfter(Request $request) {
 
         $input = $request->all();
-
-        //$last_order_id = $request->session()->get('last_order_id'); // check the laster order id
         $last_order_id = "";
-        //$last_order_id = "ddddd";
         $force = $request->input("force");
 
         $cart_id = isset($input['cart_id']) ? trim($input['cart_id']) : "";
@@ -352,8 +349,6 @@ class CartController extends CustomerController
         if(!empty($last_order_id) && $force !="1") {
             return response()->json(['error' => 'You Have already placed order, if you want to place another order please confirm your order','code'=>'202'], 400);
         }
-
-
         $refer = isset($input['refer']) ? trim($input['refer']) : "";
 
         $products = $request->input("products");
@@ -398,10 +393,7 @@ class CartController extends CustomerController
 
         Log::info("paypal pay ".$refer.'--'.json_encode($addressData));
 
-        $res = Cart::saveCustomerAddress($addressData);
-
-
-
+        Cart::saveCustomerAddress($addressData);
 
         $shippingMethod = "free_free"; // 包邮
         $shippingMethod = "flatrate_flatrate";
@@ -424,6 +416,13 @@ class CartController extends CustomerController
 
         try {
             $order = $this->smartButton->createOrder($this->buildRequestBody($input));
+
+            
+
+            //$order_utm = $this->orderUtmRepository->create($order_utm);
+
+
+
             $data = [];
             $data['order'] = $order;
             $data['code'] = 200;
@@ -575,6 +574,24 @@ class CartController extends CustomerController
 
             // get order transaction info
             $order = $this->orderRepository->find($orderRes->id);
+
+            // save utm for order
+            $utm_source = $request->input("utm_source");
+            $utm_medium = $request->input("utm_medium");
+            $utm_campaign = $request->input("utm_campaign");
+            $utm_term = $request->input("utm_term");
+            $utm_content = $request->input("utm_content");
+
+            // insert utm info to order_utm table
+            $order_utm = [];
+            $order_utm['order_id'] = $orderRes->id;
+            $order_utm['utm_source'] = $utm_source;
+            $order_utm['utm_medium'] = $utm_medium;
+            $order_utm['utm_campaign'] = $utm_campaign;
+            $order_utm['utm_term'] = $utm_term;
+            $order_utm['utm_content'] = $utm_content;
+
+            \NexaMerchant\Apps\Apis\Models\OrderUtm::create($order_utm);
 
             $data = [];
             $data['order'] = $order;
@@ -902,6 +919,24 @@ class CartController extends CustomerController
             $data['order'] = $order;
             if ($order) {
                 $orderId = $order->id;
+
+                // save utm for order
+                $utm_source = $request->input("utm_source");
+                $utm_medium = $request->input("utm_medium");
+                $utm_campaign = $request->input("utm_campaign");
+                $utm_term = $request->input("utm_term");
+                $utm_content = $request->input("utm_content");
+
+                // insert utm info to order_utm table
+                $order_utm = [];
+                $order_utm['order_id'] = $order->id;
+                $order_utm['utm_source'] = $utm_source;
+                $order_utm['utm_medium'] = $utm_medium;
+                $order_utm['utm_campaign'] = $utm_campaign;
+                $order_utm['utm_term'] = $utm_term;
+                $order_utm['utm_content'] = $utm_content;
+
+                \NexaMerchant\Apps\Apis\Models\OrderUtm::create($order_utm);
 
                 //customer id
                 $cus_id = isset($input['cus_id']) ? trim($input['cus_id']) : null;
