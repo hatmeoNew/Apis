@@ -340,7 +340,8 @@ class CartRuleController extends MarketingController
                 'ends_till'           => null,
                 'action_type'         => $rule['action_type'],
                 'discount_amount'     => 0,
-                'end_other_rules'     => 1,
+                'end_other_rules'     => 0,
+                'sort_order'          => 100,
                 'status'              => $status, // 0 means inactive
                 'coupon_type'         => 0,
                 'use_auto_generation' => 0,
