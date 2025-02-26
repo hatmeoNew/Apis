@@ -22,10 +22,10 @@ class CategoryResource extends AdminCategoryResource
         // get products
         $products = [];
         //if ($category->products_count > 0) {
-            $products = $category->products()->limit(10)->get();
+        $products = $category->products()->limit(10)->get();
        // }
 
-        Log::info('CategoryResource:toArray:category'.json_encode($category));
+        //Log::info('CategoryResource:toArray:category:product'.json_encode($products));
 
 
 

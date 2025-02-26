@@ -187,6 +187,12 @@ class ChannelController
      *
      *                      @OA\Items(type="integer", example=1)
      *                  ),
+     *                  @OA\Property(
+     *                      property="countries",
+     *                      type="array",
+     *
+     *                      @OA\Items(type="integer", example=1)
+     *                  ),
      *
      *                  @OA\Property(
      *                      property="default_locale_id",
@@ -349,6 +355,12 @@ class ChannelController
      *                      property="hostname",
      *                      type="string",
      *                      example="example.com"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="countries",
+     *                      type="array",
+     *
+     *                      @OA\Items(type="integer", example=1)
      *                  ),
      *                  @OA\Property(
      *                      property="locales",

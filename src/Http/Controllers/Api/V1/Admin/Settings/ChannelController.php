@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Event;
 use Webkul\Core\Repositories\ChannelRepository;
 use Webkul\Core\Rules\Code;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Settings\ChannelResource;
+use NexaMerchant\Apis\Models\ChannelCountry;
 
 class ChannelController extends SettingController
 {
@@ -62,6 +63,9 @@ class ChannelController extends SettingController
             'is_maintenance_on'     => 'boolean',
             'maintenance_mode_text' => 'nullable',
             'allowed_ips'           => 'nullable',
+
+            /** countries */
+            'countries' => 'array|min:1',
         ]);
 
         $data = $this->setSEOContent($data);
@@ -71,6 +75,16 @@ class ChannelController extends SettingController
         $channel = $this->getRepositoryInstance()->create($data);
 
         Event::dispatch('core.channel.create.after', $channel);
+
+        // save countries
+        if (isset($data['countries'])) {
+            foreach ($data['countries'] as $country) {
+                ChannelCountry::create([
+                    'channel_id' => $channel->id,
+                    'country_id' => $country,
+                ]);
+            }
+        }
 
         return response([
             'data'    => new ChannelResource($channel),
@@ -120,6 +134,9 @@ class ChannelController extends SettingController
             'is_maintenance_on'                => 'boolean',
             $locale.'.maintenance_mode_text'   => 'nullable',
             'allowed_ips'                      => 'nullable',
+
+            /** countries */
+            'countries' => 'array|min:1',
         ]);
 
         //var_dump($data);exit;
@@ -133,6 +150,17 @@ class ChannelController extends SettingController
         $channel = $this->getRepositoryInstance()->update($data, $id);
 
         Event::dispatch('core.channel.update.after', $channel);
+
+        // save countries
+        ChannelCountry::where('channel_id', $channel->id)->delete();
+        if (isset($data['countries'])) {
+            foreach ($data['countries'] as $country) {
+                ChannelCountry::create([
+                    'channel_id' => $channel->id,
+                    'country_id' => $country,
+                ]);
+            }
+        }
 
         if ($channel->base_currency->code !== session()->get('currency')) {
             session()->put('currency', $channel->base_currency->code);

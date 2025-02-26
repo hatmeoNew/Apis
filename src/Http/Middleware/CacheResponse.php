@@ -16,9 +16,21 @@ class CacheResponse
      */
     public function handle($request, Closure $next)
     {
-        $cacheKey = 'api_cache_' . md5($request->fullUrl());
-
-        $cleanCache = $request->input('clean-cache');
+        // url the url path and query string as cache key, need sort query string
+        // when query string include clean-cache, and it's value is true, then clean cache
+        $url = $request->fullUrl();
+        $cleanCache = $request->get('clean-cache', false);
+        $urlParts = parse_url($url);
+        $query = [];
+        if (isset($urlParts['query'])) {
+            parse_str($urlParts['query'], $query);
+        }
+        ksort($query);
+        unset($query['clean-cache']);
+        $queryStr = http_build_query($query);
+        $cacheKey = md5($urlParts['path'] . '?' . $queryStr);
+        
+        $cacheKey = 'api_cache_' . $cacheKey;
 
         if (Cache::has($cacheKey) && ! $cleanCache) {
             $cacheData = Cache::get($cacheKey);
