@@ -135,4 +135,92 @@ class ChannelController
     public function get()
     {
     }
+
+    /**
+     * @OA\Get(
+     *      path="/api/v1/channels/by-url/{url}",
+     *      operationId="getShopChannelByUrl",
+     *      tags={"Channels"},
+     *      summary="Get shop channel by url",
+     *      description="Returns shop channel by url",
+     *
+     *      @OA\Parameter(
+     *          name="url",
+     *          description="Channel url",
+     *          required=true,
+     *          in="path",
+     *
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *
+     *          @OA\JsonContent(
+     *
+     *              @OA\Property(
+     *                  property="data",
+     *                  type="object",
+     *                  ref="#/components/schemas/Channel"
+     *              )
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
+     */
+    public function getChannelByUrl()
+    {
+    }
+
+    /**
+     * @OA\Get(
+     *      path="/api/v1/channels/countries/{url}",
+     *      operationId="getShopChannelCountries",
+     *      tags={"Channels"},
+     *      summary="Get shop channel countries",
+     *      description="Returns shop channel countries",
+     *
+     *      @OA\Parameter(
+     *          name="url",
+     *          description="Channel url",
+     *          required=true,
+     *          in="path",
+     *
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *
+     *          @OA\JsonContent(
+     *
+     *              @OA\Property(
+     *                  property="data",
+     *                  type="array",
+     *
+     *                  @OA\Items(ref="#/components/schemas/Country")
+     *              )
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
+     */
+
+    public function getChannelCountries()
+    {
+    }
 }

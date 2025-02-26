@@ -49,6 +49,9 @@ Route::controller(ChannelController::class)->prefix('channels')->middleware('cac
     Route::get('{id}', 'getResource');
 
     Route::get('by-url/{url}', 'getChannelByUrl');
+
+    // get the channel countries
+    Route::get('countries/{url}', 'getChannelCountries');
 });
 
 /**
