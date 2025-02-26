@@ -178,11 +178,6 @@ class CartController extends CustomerController
             ], 400);
         }
     }
-    public function add($product_id)
-    {
-       print_r(123);exit;
-    }
-
 
     /**
      * Updates the quantity of the items present in the cart.
@@ -263,6 +258,11 @@ class CartController extends CustomerController
     public function applyCoupon(Request $request)
     {
         $couponCode = $request->code;
+        $cart_id = $request->input("cart_id");
+        if($cart_id) {
+            $cart = $this->cartRepository->find($cart_id);
+            Cart::setCart($cart);
+        }
 
         try {
             if (strlen($couponCode)) {
@@ -296,8 +296,14 @@ class CartController extends CustomerController
      *
      * @return \Illuminate\Http\Response
      */
-    public function removeCoupon()
+    public function removeCoupon(Request $request)
     {   
+        $cart_id = $request->input("cart_id");
+        if($cart_id) {
+            $cart = $this->cartRepository->find($cart_id);
+            Cart::setCart($cart);
+        }
+
         Cart::removeCouponCode()->collectTotals();
 
         $cart = Cart::getCart();

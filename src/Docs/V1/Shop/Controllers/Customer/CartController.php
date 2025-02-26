@@ -522,7 +522,12 @@ class CartController
      *                      property="code",
      *                      type="string",
      *                      example="FLAT10"
-     *                  )
+     *                  ),
+     *                 @OA\Property(
+     *                      property="cart_id",
+     *                     type="integer",
+     *                     example=1
+     *                 ),
      *              )
      *          )
      *      ),
@@ -559,6 +564,13 @@ class CartController
      *      summary="Remove cart coupon",
      *      description="Remove cart coupon",
      *      security={ {"sanctum": {} }},
+     *  
+     *    @OA\RequestBody(
+     *         @OA\Property(
+     *            property="cart_id",
+     *           type="integer",
+     *          example=1
+     *     ),
      *
      *      @OA\Response(
      *          response=200,
