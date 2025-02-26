@@ -18,7 +18,13 @@ class CategoryResource extends AdminCategoryResource
         /* assign category */
         $category = $this->category ? $this->category : $this;
 
-        $products = $category->products()->limit(10)->get();
+        // get products
+        $products = [];
+        if ($category->products_count > 0) {
+            $products = $category->products()->limit(10)->get();
+        }
+        // $products = $category->products()->limit(10)->get();
+
 
         /* generating resource */
         return [
