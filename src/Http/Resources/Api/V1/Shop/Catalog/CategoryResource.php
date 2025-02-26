@@ -2,6 +2,7 @@
 
 namespace NexaMerchant\Apis\Http\Resources\Api\V1\Shop\Catalog;
 
+use Illuminate\Support\Facades\Log;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Catalog\CategoryResource as AdminCategoryResource;
 
 class CategoryResource extends AdminCategoryResource
@@ -20,10 +21,12 @@ class CategoryResource extends AdminCategoryResource
 
         // get products
         $products = [];
-        if ($category->products_count > 0) {
+        //if ($category->products_count > 0) {
             $products = $category->products()->limit(10)->get();
-        }
-        // $products = $category->products()->limit(10)->get();
+       // }
+
+        Log::info('CategoryResource:toArray:category'.json_encode($category));
+
 
 
         /* generating resource */
