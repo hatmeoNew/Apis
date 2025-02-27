@@ -270,10 +270,22 @@ class CartController extends CustomerController
 
                 if (Cart::getCart()->coupon_code == $couponCode) {
 
+                    // add coupon code description to response
+                    $couponCodeInfo = $this->cartRuleCouponRepository->findOneByField('code', $couponCode);
+                    if (is_null($couponCodeInfo)) {
+                        return response([
+                            'message' => trans('Apis::app.shop.checkout.cart.coupon.invalid'),
+                        ], 400);
+                    }
+
+                    // get the coupon code description
+                    $couponCodeDescription = $couponCodeInfo->cart_rule->description;
                     $cart = Cart::getCart();
+                    $cart->coupon_code_description = $couponCodeDescription;
 
                     return response([
                         'data'    => $cart ? app()->make($this->resource(), ['resource' => $cart]) : null,
+                        'coupon_description' => $couponCodeDescription,
                         'message' => trans('Apis::app.shop.checkout.cart.coupon.success'),
                     ]);
                 }
