@@ -132,6 +132,8 @@ class ProductController extends CatalogController
         }
         $input['attribute_family_id'] = $attributeFamily->id;
 
+        var_dump($input);exit;
+
         // create super attributes and check if the attribute is valid
         $attributeRepository = app('Webkul\Attribute\Repositories\AttributeRepository');
         $attributeOptionDeleted = [];
@@ -376,13 +378,7 @@ class ProductController extends CatalogController
         $tableData['meta_title'] = $req['meta_title'];
         $tableData['meta_keywords'] = $req['meta_keywords'];
         $tableData['meta_description'] = $req['meta_description'];
-       
-        //Log::info("quick-create-product: ".json_encode($tableData));
 
-
-        // check the sku is exist and update the product
-        
-      
 
         $product = $this->getRepositoryInstance()->update($tableData, $id);
 
