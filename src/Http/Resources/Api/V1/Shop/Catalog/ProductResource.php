@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Webkul\Checkout\Facades\Cart;
 use Webkul\Product\Facades\ProductImage;
 use Webkul\Product\Helpers\BundleOption;
+use Illuminate\Support\Facades\Redis;
 
 class ProductResource extends JsonResource
 {
@@ -47,6 +48,14 @@ class ProductResource extends JsonResource
             $packages_package = \Nicelizhi\OneBuy\Helpers\Utils::makeProducts($product, [2,1,3,4]);
         }
 
+        $redis = Redis::connection('default');
+
+        $sell_points_key = "sell_points_".$product->url_key;
+        $sell_points = $redis->hgetall($sell_points_key);
+
+
+        
+
         /* generating resource */
         return [
             /* product's information */
@@ -65,6 +74,7 @@ class ProductResource extends JsonResource
             'base_image'         => ProductImage::getProductBaseImage($product),
             'created_at'         => $product->created_at,
             'updated_at'         => $product->updated_at,
+            'product_size_img'   => $product->product_size_img,
 
             /* product's reviews */
             'reviews' => [
@@ -85,6 +95,7 @@ class ProductResource extends JsonResource
                 $product->type !== 'grouped',
                 $product->getTypeInstance()->showQuantityBox()
             ),
+            'sell_point' => $sell_points,
 
             /* product's extra information */
             $this->merge($this->allProductExtraInfo()),

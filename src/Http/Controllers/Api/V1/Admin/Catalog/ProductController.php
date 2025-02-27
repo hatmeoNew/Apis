@@ -132,8 +132,6 @@ class ProductController extends CatalogController
         }
         $input['attribute_family_id'] = $attributeFamily->id;
 
-        var_dump($input);exit;
-
         // create super attributes and check if the attribute is valid
         $attributeRepository = app('Webkul\Attribute\Repositories\AttributeRepository');
         $attributeOptionDeleted = [];
