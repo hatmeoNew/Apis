@@ -14,6 +14,9 @@ class OrderItemResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        $images = [];
+
         return [
             'id'                                 => $this->id,
             'sku'                                => $this->sku,
@@ -30,7 +33,7 @@ class OrderItemResource extends JsonResource
             'qty_refunded'                       => $this->qty_refunded,
             'price'                              => $this->price,
             // get images first
-            'images'                             => $this->product->images()->first(),
+            'images'                             => $images,
             'formatted_price'                    => core()->formatPrice($this->price, $this->order->order_currency_code),
             'base_price'                         => $this->base_price,
             'formatted_base_price'               => core()->formatBasePrice($this->base_price),
