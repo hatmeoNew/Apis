@@ -16,6 +16,7 @@ use Webkul\Product\Repositories\ProductInventoryRepository;
 use Webkul\Product\Repositories\ProductRepository;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Catalog\ProductResource;
 use Nicelizhi\Airwallex\Core;
+use Illuminate\Support\Facades\Redis;
 
 class ProductController extends CatalogController
 {
@@ -568,6 +569,20 @@ class ProductController extends CatalogController
         Event::dispatch('catalog.product.delete.before', $id);
 
         $this->getRepositoryInstance()->delete($id);
+
+        // delete the product rules
+        $rules = Redis::smembers('product-quantity-rules-'.$id);
+        $cartrulerepository = app('Webkul\CartRule\Repositories\CartRuleRepository');
+        
+        foreach($rules as $rule) {
+            
+            // delete the rule
+            $cartrulerepository->delete($rule);
+        }
+
+        // delete the product quantity rules
+        Redis::del('product-quantity-rules-'.$id);
+        Redis::del('product-quantity-price-'.$id);
 
         Event::dispatch('catalog.product.delete.after', $id);
 
