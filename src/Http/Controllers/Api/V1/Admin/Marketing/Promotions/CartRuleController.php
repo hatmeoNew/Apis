@@ -310,7 +310,7 @@ class CartRuleController extends MarketingController
         // create a new cart rule for the product quantity
         $request->validate([
             'product_id'                => 'required|integer',
-            'rules'                     => 'required|array|min:1',
+            'rules'                     => 'required|array|min:1|max:4',
         ]);
 
         $cartRule = app(\Webkul\CartRule\Repositories\CartRuleRepository::class);
@@ -395,6 +395,29 @@ class CartRuleController extends MarketingController
 
                 // update the rule
                 //$cartRule = $this->getRepositoryInstance()->findOrFail($id);
+
+                // rule attribute_family_id is not equal to product attribute_family_id
+                $dbRule = $this->getRepositoryInstance()->find($id);
+                $dbRuleAttributes = $dbRule->conditions;
+
+                foreach($dbRuleAttributes as $dbRuleAttribute){
+                    if($dbRuleAttribute['attribute'] == 'product|attribute_family_id'){
+                        if($dbRuleAttribute['value'] != $product->attribute_family_id){
+
+                            // send the message to the user by feishu
+                            \Nicelizhi\Shopify\Helpers\Utils::send('The cart rule attribute_family_id is not equal to the product attribute_family_id, product_id: '.$product->id.' cart_rule_attribute_family_id_not_equal_to_product_attribute_family_id');
+
+                            $res = [];
+                            $res['db'] = $dbRuleAttribute['value'];
+                            $res['product'] = $product->attribute_family_id;
+                            $res['message'] = "ERROR Cart RULE UPDATE";
+                            return response()->json($res, 400);
+                        }
+                    }
+                }
+
+
+
 
                 Event::dispatch('promotions.cart_rule.update.before', $id);
 
