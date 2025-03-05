@@ -4,6 +4,8 @@ namespace NexaMerchant\Apis\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CacheResponse
 {
@@ -29,6 +31,8 @@ class CacheResponse
         unset($query['clean-cache']);
         $queryStr = http_build_query($query);
         $cacheKey = md5($urlParts['path'] . '?' . $queryStr);
+
+        $cacheKey = $this->makePageCacheKey($request->url());
         
         $cacheKey = 'api_cache_' . $cacheKey;
 
@@ -43,5 +47,11 @@ class CacheResponse
         Cache::put($cacheKey, $response->getContent(), 30*24*3600); // Cache for 1 day
 
         return $response;
+    }
+
+    private function makePageCacheKey($url){
+
+        Log::info(':URL: ' . $url);
+        return 'api_cache_' . Str::slug($url);
     }
 }
