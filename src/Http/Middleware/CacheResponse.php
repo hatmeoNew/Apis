@@ -32,7 +32,7 @@ class CacheResponse
         $queryStr = http_build_query($query);
         $cacheKey = md5($urlParts['path'] . '?' . $queryStr);
 
-        $cacheKey = $this->makePageCacheKey($request->url());
+        $cacheKey = $this->makePageCacheKey($request->fullUrl());
         
         $cacheKey = 'api_cache_' . $cacheKey;
 
@@ -50,8 +50,6 @@ class CacheResponse
     }
 
     private function makePageCacheKey($url){
-
-        Log::info(':URL: ' . $url);
         return 'api_cache_' . Str::slug($url);
     }
 }
