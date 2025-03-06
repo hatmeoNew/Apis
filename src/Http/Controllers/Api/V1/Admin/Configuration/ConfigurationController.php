@@ -7,6 +7,7 @@ use Webkul\Core\Repositories\CoreConfigRepository;
 use Webkul\Core\Tree;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\AdminController;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\DB;
 
 class ConfigurationController extends AdminController
 {
@@ -86,19 +87,23 @@ class ConfigurationController extends AdminController
             ]);
             //var_dump($config);exit;
             if ($config) {
-                // $config->update([
-                //     'value' => $item,
-                // ]);
-                
-                // save the configuration data
                 $this->coreConfigRepository->update([
                     'value' => $item,
                 ], $config->id);
-
-
-
-
-                continue;
+            }else{
+                // insert new record
+                // $this->coreConfigRepository->create([
+                //     'code'    => $key,
+                //     'value'   => $item,
+                //     'locale'  => $locale,
+                //     'channel' => $channel,
+                // ]);
+                DB::table('core_config')->insert([
+                    'code'    => $key,
+                    'value'   => $item,
+                    'locale_code'  => $locale,
+                    'channel_code' => $channel,
+                ]);
             }
 
             // $this->coreConfigRepository->create([
