@@ -405,7 +405,7 @@ class CartRuleController extends MarketingController
                         if($dbRuleAttribute['value'] != $product->attribute_family_id){
 
                             // send the message to the user by feishu
-                            \Nicelizhi\Shopify\Helpers\Utils::send('The cart rule attribute_family_id is not equal to the product attribute_family_id, product_id: '.$product->id.' cart_rule_attribute_family_id_not_equal_to_product_attribute_family_id');
+                            \Nicelizhi\Shopify\Helpers\Utils::sendFeishu('The cart rule attribute_family_id is not equal to the product attribute_family_id, product_id: '.$product->id.' cart_rule_attribute_family_id_not_equal_to_product_attribute_family_id');
 
                             $res = [];
                             $res['db'] = $dbRuleAttribute['value'];
