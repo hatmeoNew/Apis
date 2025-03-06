@@ -385,6 +385,9 @@ class ProductController extends CatalogController
 
         $images = $request->input('images');
 
+        // delete the product images
+        $product->images()->delete();
+
         // add images to the product
         $productImages = [];
         foreach($images as $key=>$image) {
