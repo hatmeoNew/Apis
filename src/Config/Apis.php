@@ -48,6 +48,9 @@ return [
         'APIs for the application',
     ],
 
+    // enable the api service
+    'enable' => env('APIS_ENABLE', true),
+
     
 
 ];
