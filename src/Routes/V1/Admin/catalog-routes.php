@@ -15,7 +15,7 @@ Route::group([
      * Product routes.
      */
     Route::controller(ProductController::class)->prefix('products')->group(function () {
-        Route::get('', 'allResources');
+        Route::get('', 'allResources')->middleware('admin.cache.response');
 
         Route::post('', 'store');
 
