@@ -32,7 +32,7 @@ class AdminCacheResponse
 
         $response = $next($request);
 
-        Cache::put($cacheKey, $response->getContent(), $cacheData); // Cache for 
+        Cache::put($cacheKey, $response->getContent(), $cacheTime); // Cache for 
 
         return $response;
     }
