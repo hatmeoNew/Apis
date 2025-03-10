@@ -385,13 +385,18 @@ class CartRuleController extends MarketingController
             $cartRuleData['discount_amount'] = $discount_amount;
             $cartRuleData['status'] = $status;
             $cartRuleData['discount_quantity'] = $qty;
-
-            //var_dump($cartRuleData);
-            // return response()->json([
-            //     'data' => $cartRuleData
-            // ]);
                         
             if($id > 0) {
+
+                // check the id in the product-quantity-price set
+                $price = Redis::zscore('product-quantity-price-'.$product_id, $id);
+                if($price == null){
+                    return response()->json(['message' => 'ERROR Cart RULE UPDATE'], 400);
+                }
+
+                
+
+
 
                 // update the rule
                 //$cartRule = $this->getRepositoryInstance()->findOrFail($id);
@@ -405,7 +410,7 @@ class CartRuleController extends MarketingController
                         if($dbRuleAttribute['value'] != $product->attribute_family_id){
 
                             // send the message to the user by feishu
-                            \Nicelizhi\Shopify\Helpers\Utils::sendFeishu('The cart rule attribute_family_id is not equal to the product attribute_family_id, product_id: '.$product->id.' cart_rule_attribute_family_id_not_equal_to_product_attribute_family_id');
+                            \Nicelizhi\Shopify\Helpers\Utils::sendFeishu(config('onebuy.brand').': The cart rule attribute_family_id is not equal to the product attribute_family_id, product_id: '.$product->id.' cart_rule_attribute_family_id_not_equal_to_product_attribute_family_id');
 
                             $res = [];
                             $res['db'] = $dbRuleAttribute['value'];
