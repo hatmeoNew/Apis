@@ -18,7 +18,7 @@ Route::group([
 
         Route::get('find-by-email', 'findByEmail');
 
-        Route::get('', 'allResources');
+        Route::get('', 'allResources')->middleware('admin.cache.response:120');
 
         Route::get('{id}', 'getResource');
 
@@ -35,7 +35,7 @@ Route::group([
      * Shipment routes.
      */
     Route::controller(ShipmentController::class)->prefix('shipments')->group(function () {
-        Route::get('', 'allResources');
+        Route::get('', 'allResources')->middleware('admin.cache.response:120');
 
         Route::get('{id}', 'getResource');
 
@@ -47,7 +47,7 @@ Route::group([
      * Invoice routes.
      */
     Route::controller(InvoiceController::class)->prefix('invoices')->group(function () {
-        Route::get('', 'allResources');
+        Route::get('', 'allResources')->middleware('admin.cache.response:120');
 
         Route::get('{id}', 'getResource');
 
@@ -58,7 +58,7 @@ Route::group([
      * Refund routes.
      */
     Route::controller(RefundController::class)->prefix('refunds')->group(function () {
-        Route::get('', 'allResources');
+        Route::get('', 'allResources')->middleware('admin.cache.response:120');
 
         Route::get('{id}', 'getResource');
 
