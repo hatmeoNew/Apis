@@ -4,7 +4,6 @@ namespace NexaMerchant\Apis\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class AdminCacheResponse
@@ -16,7 +15,7 @@ class AdminCacheResponse
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $cacheTime = 24*3600)
     {
         // url the url path and query string as cache key, need sort query string
         // when query string include clean-cache, and it's value is true, then clean cache
@@ -33,7 +32,7 @@ class AdminCacheResponse
 
         $response = $next($request);
 
-        Cache::put($cacheKey, $response->getContent(), 3600); // Cache for 
+        Cache::put($cacheKey, $response->getContent(), $cacheData); // Cache for 
 
         return $response;
     }
