@@ -23,6 +23,7 @@ class ApisServiceProvider extends ServiceProvider
         'sanctum.locale'   => \NexaMerchant\Apis\Http\Middleware\LocaleMiddleware::class,
         'sanctum.currency' => \NexaMerchant\Apis\Http\Middleware\CurrencyMiddleware::class,
         'cache.response'   => \NexaMerchant\Apis\Http\Middleware\CacheResponse::class,
+        'admin.cache.response'   => \NexaMerchant\Apis\Http\Middleware\AdminCacheResponse::class,
     ];
 
     /**
