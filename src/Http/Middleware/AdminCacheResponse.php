@@ -5,6 +5,7 @@ namespace NexaMerchant\Apis\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
 
 class AdminCacheResponse
 {
@@ -32,7 +33,7 @@ class AdminCacheResponse
 
         $response = $next($request);
 
-        Cache::tags(['api-admin'])->put($cacheKey, $response->getContent(), $cacheTime); // Cache for 
+        Cache::tags([ApiCacheKey::API_ADMIN])->put($cacheKey, $response->getContent(), $cacheTime); // Cache for 
 
         return $response;
     }

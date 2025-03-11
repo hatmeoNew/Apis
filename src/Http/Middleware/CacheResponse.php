@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
 
 class CacheResponse
 {
@@ -53,7 +54,7 @@ class CacheResponse
         $response = $next($request);
         $response->headers->set('X-Cache-Key', $cacheKey);
 
-        Cache::tags(['api-shop'])->put($cacheKey, $response->getContent(), $this->cacheTime); // Cache for 1 day
+        Cache::tags([ApiCacheKey::API_SHOP])->put($cacheKey, $response->getContent(), $this->cacheTime); // Cache for 1 day
 
         // add cache generated date to response header
         $response->headers->set('X-Cache-Generated-At', now()->toDateTimeString());

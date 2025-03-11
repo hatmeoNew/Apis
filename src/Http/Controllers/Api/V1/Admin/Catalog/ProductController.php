@@ -17,6 +17,9 @@ use Webkul\Product\Repositories\ProductRepository;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Catalog\ProductResource;
 use Nicelizhi\Airwallex\Core;
 use Illuminate\Support\Facades\Redis;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
+use Illuminate\Support\Facades\Cache;
+
 
 class ProductController extends CatalogController
 {
@@ -423,6 +426,9 @@ class ProductController extends CatalogController
             }
 
             DB::commit();
+
+            Cache::tags([ApiCacheKey::API_ADMIN])->flush();
+            Cache::tags([ApiCacheKey::API_SHOP])->flush();
 
             return response([
                 'data'    => new ProductResource($product),
