@@ -22,7 +22,7 @@ class AdminCacheResponse
 
         $cacheKey = $this->makePageCacheKey($request->fullUrl());
         
-        $cacheKey = 'api_cache_' . $cacheKey;
+        $cacheKey = 'api_admin_cache_' . $cacheKey;
 
         if (Cache::has($cacheKey)) {
             $cacheData = Cache::get($cacheKey);
