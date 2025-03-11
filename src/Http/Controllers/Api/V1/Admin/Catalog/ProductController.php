@@ -427,8 +427,8 @@ class ProductController extends CatalogController
 
             DB::commit();
 
-            Cache::tags([ApiCacheKey::API_ADMIN])->flush();
-            Cache::tags([ApiCacheKey::API_SHOP])->flush();
+            Cache::tags([ApiCacheKey::API_ADMIN_PRODUCTS])->flush();
+            Cache::tags([ApiCacheKey::API_SHOP_PRODUCTS])->flush();
 
             return response([
                 'data'    => new ProductResource($product),

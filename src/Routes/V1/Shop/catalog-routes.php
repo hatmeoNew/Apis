@@ -6,11 +6,12 @@ use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Catalog\AttributeFamilyContro
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Catalog\CategoryController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Catalog\ProductController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Catalog\ProductReviewController;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
 
 /**
  * Product routes.
  */
-Route::controller(ProductController::class)->prefix('products')->middleware('cache.response')->group(function () {
+Route::controller(ProductController::class)->prefix('products')->middleware('cache.response:360000,'.ApiCacheKey::API_SHOP_PRODUCTS.','.ApiCacheKey::API_SHOP)->group(function () {
 
     Route::get('get-index/{template_id}', 'getIndexContent');
     Route::get('get-recommend/{product_id}', 'getRecommend');

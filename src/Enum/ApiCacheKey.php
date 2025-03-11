@@ -18,4 +18,9 @@ class ApiCacheKey extends Enum
     const API_SHOP = 'api_shop';
     const API_ADMIN = 'api_admin';
     const API_CACHE = 'api_cache';
+    const API_SHOP_PRODUCTS = 'api_shop_products';
+    const API_SHOP_CATEGORY = 'api_shop_category';
+    const API_ADMIN_PRODUCTS = 'api_admin_products';
+    const API_ADMIN_CATEGORIES = 'api_admin_categories';
+    const API_ADMIN_ORDER = 'api_admin_order';
 }

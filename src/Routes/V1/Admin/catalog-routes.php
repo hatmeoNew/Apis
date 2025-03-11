@@ -6,6 +6,7 @@ use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Catalog\AttributeFamilyContr
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Catalog\CategoryController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Catalog\ProductController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Catalog\OfferController;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
 
 Route::group([
     'middleware' => ['auth:sanctum', 'sanctum.admin'],
@@ -15,7 +16,7 @@ Route::group([
      * Product routes.
      */
     Route::controller(ProductController::class)->prefix('products')->group(function () {
-        Route::get('', 'allResources')->middleware('admin.cache.response');
+        Route::get('', 'allResources')->middleware('admin.cache.response:1200,'.ApiCacheKey::API_ADMIN_PRODUCTS.','.ApiCacheKey::API_ADMIN);
 
         Route::post('', 'store');
 
@@ -38,7 +39,7 @@ Route::group([
      * Category routes.
      */
     Route::controller(CategoryController::class)->prefix('categories')->group(function () {
-        Route::get('', 'allResources');
+        Route::get('', 'allResources')->middleware('admin.cache.response:1200,'.ApiCacheKey::API_ADMIN_CATEGORIES.','.ApiCacheKey::API_ADMIN);
 
         Route::post('', 'store');
 
