@@ -16,7 +16,7 @@ class AdminCacheResponse
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $cacheTime = 60)
+    public function handle($request, Closure $next, $cacheTime = 1 * 24 * 3600)
     {
         // url the url path and query string as cache key, need sort query string
         // when query string include clean-cache, and it's value is true, then clean cache
