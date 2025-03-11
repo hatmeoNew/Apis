@@ -32,7 +32,7 @@ class AdminCacheResponse
 
         $response = $next($request);
 
-        Cache::put($cacheKey, $response->getContent(), $cacheTime); // Cache for 
+        Cache::tags(['api-admin'])->put($cacheKey, $response->getContent(), $cacheTime); // Cache for 
 
         return $response;
     }

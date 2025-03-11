@@ -53,7 +53,7 @@ class CacheResponse
         $response = $next($request);
         $response->headers->set('X-Cache-Key', $cacheKey);
 
-        Cache::put($cacheKey, $response->getContent(), $this->cacheTime); // Cache for 1 day
+        Cache::tags(['api-shop'])->put($cacheKey, $response->getContent(), $this->cacheTime); // Cache for 1 day
 
         // add cache generated date to response header
         $response->headers->set('X-Cache-Generated-At', now()->toDateTimeString());
