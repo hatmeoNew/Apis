@@ -11,6 +11,7 @@ use Webkul\Sales\Contracts\OrderComment;
 use Webkul\Shop\Mail\Order\ShipmentNotification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Http\Request;
 
 
 class FaqController extends AdminController
@@ -32,7 +33,7 @@ class FaqController extends AdminController
     public function store(Request $request) {
         $data = $request->all();
 
-        $key = $data['key'];
+        $key = isset($data['key']) ? $data['key'] : time();
         $q = $data['q'];
         $a = $data['a'];
 
