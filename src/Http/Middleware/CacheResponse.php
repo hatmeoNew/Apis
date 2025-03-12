@@ -11,6 +11,8 @@ use NexaMerchant\Apis\Enum\ApiCacheKey;
 class CacheResponse
 {
     protected $cacheTime = 30 * 24 * 3600; // Default: 30 days
+
+    protected $cacheTagMap = [];
     /**
      * Handle an incoming request.
      *
@@ -21,31 +23,18 @@ class CacheResponse
     public function handle($request, Closure $next, $cacheTime = 1 * 24 * 3600, ...$tags)
     {
         // Check if we should clean the cache
-        $cleanCache = $request->get('clean-cache', false);
+
         
         // Create a normalized URL for cache key (without clean-cache parameter)
-        $url = $request->url();
-        $queryParams = $request->query();
-        unset($queryParams['clean-cache']); // Remove clean-cache parameter
-        
-        // Rebuild the URL without the clean-cache parameter
-        if (!empty($queryParams)) {
-            $url .= '?' . http_build_query($queryParams);
-        }
+        $url = $request->fullUrl();
         
         $cacheKey = $this->makePageCacheKey($url);
         $cacheKey = 'api_cache_' . $cacheKey;
 
         // add the cache key to response header
 
-
-        // Clean cache if requested
-        if ($cleanCache) {
-            Cache::forget($cacheKey);
-        }
-
-        if (Cache::has($cacheKey) && ! $cleanCache) {
-            $cacheData = Cache::get($cacheKey);
+        if (Cache::tags($tags)->has($cacheKey)) {
+            $cacheData = Cache::tags($tags)->get($cacheKey);
             $cacheData = json_decode($cacheData, true);
             // add the cache key to response header
             return response()->json($cacheData)->header('X-Cache-Key', $cacheKey);
@@ -55,6 +44,9 @@ class CacheResponse
         $response->headers->set('X-Cache-Key', $cacheKey);
 
         Cache::tags($tags)->put($cacheKey, $response->getContent(), $cacheTime); // Cache for 1 day
+
+        // Store the tags in the $cacheTagMap
+        $this->cacheTagMap[$cacheKey] = $tags;
 
         // add cache generated date to response header
         $response->headers->set('X-Cache-Generated-At', now()->toDateTimeString());
@@ -87,7 +79,13 @@ class CacheResponse
         return $this;
     }
 
-    private function makePageCacheKey($url){
-        return Str::slug($url);
+    public function getCacheTags(string $cacheKey): array
+    {
+        return $this->cacheTagMap[$cacheKey] ?? [];
+    }
+
+    protected function makePageCacheKey($url)
+    {
+        return md5($url);
     }
 }
