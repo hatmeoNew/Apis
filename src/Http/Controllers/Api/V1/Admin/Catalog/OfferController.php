@@ -140,14 +140,6 @@ class OfferController extends CatalogController
                 //$checkoutList[$key][$kk] = $cacheData;
             }
 
-
-            // $cachek_key = "checkout_".$item."_".$product_id;
-            // //echo $cachek_key;
-            // $cacheData = $redis->get($cachek_key);
-            // if(empty($cacheData)) {
-            //     $cacheData = json_encode($codeKeys);
-            // }
-            // $checkoutItems[$key] = $cacheData;
         }  
         return response()->json($checkoutList);
     }

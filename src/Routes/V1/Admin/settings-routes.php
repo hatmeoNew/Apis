@@ -88,6 +88,9 @@ Route::group([
      * Channel routes.
      */
     Route::controller(ChannelController::class)->prefix('channels')->group(function () {
+
+        Route::get('get-countries', 'getCountries');
+
         Route::get('', 'allResources');
 
         Route::post('', 'store');
@@ -97,6 +100,8 @@ Route::group([
         Route::put('{id}', 'update');
 
         Route::delete('{id}', 'destroy');
+
+        
     });
 
     /**

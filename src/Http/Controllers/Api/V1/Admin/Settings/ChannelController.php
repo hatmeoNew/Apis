@@ -228,4 +228,18 @@ class ChannelController extends SettingController
 
         return $editedData;
     }
+
+    /**
+     * Get the countries 
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getCountries()
+    {
+        $country = app('Webkul\Core\Repositories\CountryRepository')->all();
+
+        
+
+        return response(['data' => $country->toArray()]);
+    }
 }

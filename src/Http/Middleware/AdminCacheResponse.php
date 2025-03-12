@@ -19,7 +19,7 @@ class AdminCacheResponse
     public function handle($request, Closure $next, $cacheTime = 1 * 24 * 3600, ...$tags)
     {
         // if the debug mode is on, then don't cache the response
-        if (config('app.debug')) {
+        if (!config('app.debug')) {
             return $next($request);
         }
 
