@@ -13,11 +13,11 @@ use NexaMerchant\Apis\Enum\ApiCacheKey;
 /**
  * Core configs.
  */
-Route::controller(CoreController::class)->prefix('core-configs')->middleware('cache.response')->group(function () {
+Route::controller(CoreController::class)->prefix('core-configs')->middleware('cache.response:120000,'.ApiCacheKey::API_SHOP_CONFIG.','.ApiCacheKey::API_SHOP)->group(function () {
     Route::get('', 'getCoreConfigs');
 });
 
-Route::controller(CoreController::class)->prefix('core-config-fields')->middleware('cache.response')->group(function () {
+Route::controller(CoreController::class)->prefix('core-config-fields')->middleware('cache.response:120000,'.ApiCacheKey::API_SHOP_CONFIG.','.ApiCacheKey::API_SHOP)->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');

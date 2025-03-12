@@ -42,7 +42,7 @@ Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function ()
 /**
  * Category routes.
  */
-Route::controller(CategoryController::class)->prefix('categories')->middleware('cache.response')->group(function () {
+Route::controller(CategoryController::class)->prefix('categories')->middleware('cache.response:360000,'.ApiCacheKey::API_SHOP_CATEGORY.','.ApiCacheKey::API_SHOP)->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
