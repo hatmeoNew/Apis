@@ -25,8 +25,8 @@ class AdminCacheResponse
         
         $cacheKey = 'api_admin_cache_' . $cacheKey;
 
-        if (Cache::has($cacheKey)) {
-            $cacheData = Cache::get($cacheKey);
+        if (Cache::tags($tags)->has($cacheKey)) {
+            $cacheData = Cache::tags($tags)->get($cacheKey);
             $cacheData = json_decode($cacheData, true);
             return response()->json($cacheData);
         }
