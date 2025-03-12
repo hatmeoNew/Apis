@@ -32,6 +32,26 @@ class CountryController extends CoreController
         return CountryResource::class;
     }
 
+    public function allResources(Request $request)
+    {
+        $source = $request->get('source');
+        if($source =='channel') {
+            
+            // get channel countries
+            $channel = core()->getCurrentChannel();
+            $countries = $channel->countries->toArray();
+            $resources = $this->getRepositoryInstance()->findWhereIn('id', array_column($countries, 'country_id'));
+
+        }else{
+            // page, limit, pagination, sort, order, token, clean-cache
+
+            $resources = $this->getRepositoryInstance()->all();
+        }
+        
+
+        return response(['data' => $resources]);
+    }
+
     /**
      * Get country state group listing.
      *
