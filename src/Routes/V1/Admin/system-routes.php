@@ -30,6 +30,7 @@ Route::group([
     Route::controller(FaqController::class)->prefix('faq')->group(function () {
         Route::get('list', 'index');
         Route::post('save', 'store');
+        Route::delete('delete/{key}', 'destroy');
     });
 
     // template routes

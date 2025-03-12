@@ -43,4 +43,14 @@ class FaqController extends AdminController
             'message' => 'FAQ has been saved successfully'
         ]);
     }
+
+    // delete the faq data from redis
+    public function destroy($key) {
+        $faq = Redis::hdel('faq', $key);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'FAQ has been deleted successfully'
+        ]);
+    }
 }
