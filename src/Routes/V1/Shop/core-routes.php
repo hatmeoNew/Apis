@@ -8,6 +8,7 @@ use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Core\CountryStateController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Core\CurrencyController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Core\LocaleController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Shop\Core\ThemeController;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
 
 /**
  * Core configs.
@@ -43,7 +44,7 @@ Route::controller(CurrencyController::class)->prefix('currencies')->middleware('
 /**
  * Channel routes.
  */
-Route::controller(ChannelController::class)->prefix('channels')->middleware('cache.response')->group(function () {
+Route::controller(ChannelController::class)->prefix('channels')->middleware('cache.response:360000,'.ApiCacheKey::API_SHOP_CHANNEL.','.ApiCacheKey::API_SHOP)->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');

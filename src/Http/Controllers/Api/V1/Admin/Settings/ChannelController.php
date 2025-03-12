@@ -4,10 +4,13 @@ namespace NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Settings;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Cache;
 use Webkul\Core\Repositories\ChannelRepository;
 use Webkul\Core\Rules\Code;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Settings\ChannelResource;
 use NexaMerchant\Apis\Models\ChannelCountry;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
+
 
 class ChannelController extends SettingController
 {
@@ -85,6 +88,9 @@ class ChannelController extends SettingController
                 ]);
             }
         }
+
+        //clear cache by tag
+        Cache::tags([ApiCacheKey::API_SHOP_CHANNEL])->flush();
 
         return response([
             'data'    => new ChannelResource($channel),

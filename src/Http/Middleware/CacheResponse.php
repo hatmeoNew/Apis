@@ -33,10 +33,14 @@ class CacheResponse
 
         // add the cache key to response header
 
+        // if the debug mode is on, then don't cache the response
+        if (config('app.debug')) {
+            return $next($request);
+        }
+
         if (Cache::tags($tags)->has($cacheKey)) {
             $cacheData = Cache::tags($tags)->get($cacheKey);
             $cacheData = json_decode($cacheData, true);
-            // add the cache key to response header
             return response()->json($cacheData)->header('X-Cache-Key', $cacheKey);
         }
 

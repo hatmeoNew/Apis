@@ -14,6 +14,7 @@ class ChannelResource extends AdminChannelResource
             'base_currency_code' => core()->getBaseCurrencyCode(),
             'currencySymbol' => core()->currencySymbol(core()->getBaseCurrencyCode()),
             'home_seo' => $this->home_seo,
+            'countries'         => ChannelCountryResource::collection($this->countries),
         ]);
     }
 

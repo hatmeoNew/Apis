@@ -18,6 +18,11 @@ class AdminCacheResponse
      */
     public function handle($request, Closure $next, $cacheTime = 1 * 24 * 3600, ...$tags)
     {
+        // if the debug mode is on, then don't cache the response
+        if (config('app.debug')) {
+            return $next($request);
+        }
+
         // url the url path and query string as cache key, need sort query string
         // when query string include clean-cache, and it's value is true, then clean cache
 
