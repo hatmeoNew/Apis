@@ -11,12 +11,16 @@ class ChannelCountryResource extends JsonResource
     {
         // get countries data
 
-        $country = \DB::table('countries')->where('id', $this->id)->first();
+        $country = \DB::table('countries')->where('id', $this->country_id)->first();
+        if(!$country) {
+            return [];
+        }
 
         return [
             'id'            => $this->id,
             'code'          => $country->code,
             'name'          => $country->name,
+            'country_id'    => $this->country_id,
         ];
     }
 
