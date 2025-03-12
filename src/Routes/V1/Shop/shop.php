@@ -20,4 +20,9 @@ Route::group([
      * Customer routes.
      */
     require 'customers-routes.php';
+
+    /**
+     * Template routes.
+     */
+    require 'template-routes.php';
 });
