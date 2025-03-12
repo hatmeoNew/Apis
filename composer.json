@@ -4,6 +4,10 @@
     "description" : "Nexa merchant Apps api",
     "keywords": ["laravel", "api", "jwt", "nexa merchant", "merchant", "restful", "restful api"],
     "type": "library",
+    "suggest": {
+        "ext-sodium": "For better security, it is recommended to install the sodium extension",
+        "nexa-merchant/core": "Nexa merchant merchant package"
+    },
     "authors": [
         {
             "name": "Steven",
