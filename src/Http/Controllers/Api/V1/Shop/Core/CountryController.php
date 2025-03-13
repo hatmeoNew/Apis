@@ -35,6 +35,7 @@ class CountryController extends CoreController
     public function allResources(Request $request)
     {
         $source = $request->get('source');
+        $code = $request->get('code');
         if($source =='channel') {
             
             // get channel countries
@@ -42,12 +43,16 @@ class CountryController extends CoreController
             $countries = $channel->countries->toArray();
             $resources = $this->getRepositoryInstance()->findWhereIn('id', array_column($countries, 'country_id'));
 
-        }else{
-            // page, limit, pagination, sort, order, token, clean-cache
+            return response(['data' => $resources]);
 
-            $resources = $this->getRepositoryInstance()->all();
+        }
+
+        if($code) {
+            $resources = $this->getRepositoryInstance()->findByField('code', $code);
+            return response(['data' => $resources]);
         }
         
+        $resources = $this->getRepositoryInstance()->all();
 
         return response(['data' => $resources]);
     }
