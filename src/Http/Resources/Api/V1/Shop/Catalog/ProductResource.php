@@ -245,6 +245,16 @@ class ProductResource extends JsonResource
                     'formatted_price' => core()->currency($variant->getTypeInstance()->getMinimalPrice()),
                     'isSaleable'  => $variant->getTypeInstance()->isSaleable(),
                     'image'       => ProductImage::getProductBaseImage($variant),
+                    // add variant attributes
+                    // add variant super attributes values and labels
+                    'super_attributes' => $variant->parent->super_attributes->map(function ($attribute) use ($variant) {
+                        return [
+                            'id'    => $attribute->id,
+                            'code'  => $attribute->code,
+                            'label' => $attribute->admin_name,
+                            'value' => $variant->{$attribute->code},
+                        ];
+                    }),
                 ];
             }),
         ];
