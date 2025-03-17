@@ -5,6 +5,8 @@ namespace NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Template;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
 
 class TemplateController extends Controller
 {
@@ -252,6 +254,10 @@ class TemplateController extends Controller
                 'updated_at' => now()
             ]);
         }
+
+        // clear the cache by tag
+        Cache::tags(ApiCacheKey::API_SHOP_PRODUCTS)->flush();
+
 
         if($template){
             return response()->json(['message' => 'Template updated successfully','code'=>200]);
