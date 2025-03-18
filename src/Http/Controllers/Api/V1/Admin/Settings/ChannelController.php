@@ -172,6 +172,9 @@ class ChannelController extends SettingController
             session()->put('currency', $channel->base_currency->code);
         }
 
+        //clear cache by tag
+        Cache::tags([ApiCacheKey::API_SHOP_CHANNEL])->flush();
+
         return response([
             'data'    => new ChannelResource($channel),
             'message' => trans('Apis::app.admin.settings.channels.update-success'),

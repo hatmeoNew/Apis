@@ -24,21 +24,23 @@ class LocaleMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $localeCode = $request->header('x-locale');
+        // $localeCode = $request->header('x-locale');
 
-        if ($localeCode && $this->localeRepository->findOneByField('code', $localeCode)) {
-            app()->setLocale($localeCode);
+        // if ($localeCode && $this->localeRepository->findOneByField('code', $localeCode)) {
+        //     app()->setLocale($localeCode);
 
-            return $next($request);
-        }
+        //     return $next($request);
+        // }
 
-        $code = core()->getDefaultChannel()->default_locale;
-        if(empty($code)){
-            // code load the default env
-            $code = env('APP_LOCALE', 'en');
-        }else{
-            $code = $code->code;
-        }
+        // $code = core()->getDefaultChannel()->default_locale;
+        // if(empty($code)){
+        //     // code load the default env
+        //     $code = env('APP_LOCALE', 'en');
+        // }else{
+        //     $code = $code->code;
+        // }
+
+        $code = config('app.locale');
 
         app()->setLocale($code);
 
