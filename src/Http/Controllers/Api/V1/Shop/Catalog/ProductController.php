@@ -219,9 +219,9 @@ class ProductController extends CatalogController
                         $product_list[$key]['format_price'] = core()->currency($value['price']);
 
                         // add product review
-                        $product_list[$key]['review'] = DB::table('product_reviews')->where('product_id', $value['product_id'])->avg('rating');
+                        $product_list[$key]['review'] = DB::table('product_reviews')->where('status','approved')->where('product_id', $value['product_id'])->avg('rating');
                         // add product review count
-                        $product_list[$key]['review_count'] = DB::table('product_reviews')->where('product_id', $value['product_id'])->count();
+                        $product_list[$key]['review_count'] = DB::table('product_reviews')->where('status','approved')->where('product_id', $value['product_id'])->count();
                     }
 
 
