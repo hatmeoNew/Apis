@@ -8,6 +8,8 @@ use Webkul\Core\Tree;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\AdminController;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\DB;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
+use Illuminate\Support\Facades\Cache;
 
 class ConfigurationController extends AdminController
 {
@@ -115,6 +117,9 @@ class ConfigurationController extends AdminController
         }
 
         Event::dispatch('core.configuration.save.after');
+
+        // clear cache
+        Cache::tags(ApiCacheKey::API_SHOP_CONFIG)->flush();
 
         return response([
             'message' => trans('Apis::app.admin.configuration.save-success')

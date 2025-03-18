@@ -9,6 +9,9 @@ use Nicelizhi\Manage\Http\Requests\MassUpdateRequest;
 use Webkul\Category\Repositories\CategoryRepository;
 use Webkul\Core\Models\Channel;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Catalog\CategoryResource;
+use Illuminate\Support\Facades\Cache;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
+
 
 class CategoryController extends CatalogController
 {
@@ -54,6 +57,9 @@ class CategoryController extends CatalogController
         ]));
 
         Event::dispatch('catalog.category.create.after', $category);
+
+        // clear cache
+        Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
 
         return response([
             'data'    => new CategoryResource($category),
@@ -105,6 +111,9 @@ class CategoryController extends CatalogController
       
 
         Event::dispatch('catalog.category.update.after', $category);
+
+        // clear cache
+        Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
 
         return response([
             'data'    => new CategoryResource($category),

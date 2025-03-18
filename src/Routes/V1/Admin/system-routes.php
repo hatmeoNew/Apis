@@ -6,6 +6,7 @@ use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\System\TinyMCEController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\System\EmailController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\System\FaqController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\System\TemplateController;
+use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\System\CacheController;
 
 /**
  * System routes.
@@ -37,5 +38,10 @@ Route::group([
     Route::controller(TemplateController::class)->prefix('template')->group(function () {
         Route::get('configure/{id}', 'configure');
         Route::post('save-configure/{id}', 'saveConfigure');
+    });
+
+    // cache routes
+    Route::controller(CacheController::class)->prefix('cache')->group(function () {
+        Route::post('clear', 'clearCache');
     });
 });
