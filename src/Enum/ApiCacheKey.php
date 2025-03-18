@@ -24,6 +24,7 @@ class ApiCacheKey extends Enum
     const API_SHOP_CHANNEL = 'api_shop_channel';
     const API_SHOP_CONFIG = 'api_shop_config';
     const API_SHOP_CMS = 'api_shop_cms';
+    const API_SHOP_PRODUCTS_COMMENTS = 'api_shop_products_comments';
 
 
     const API_ADMIN_PRODUCTS = 'api_admin_products';
