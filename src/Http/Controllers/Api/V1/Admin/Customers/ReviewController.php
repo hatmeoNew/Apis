@@ -10,6 +10,8 @@ use Webkul\Product\Repositories\ProductReviewRepository;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Catalog\ProductReviewResource;
 use NexaMerchant\Apis\Imports\ProductReviewImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Cache;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
 
 class ReviewController extends BaseController
 {
@@ -48,6 +50,8 @@ class ReviewController extends BaseController
 
         Event::dispatch('customer.review.update.after', $review);
 
+        Cache::tags(ApiCacheKey::API_SHOP_PRODUCTS_COMMENTS)->flush();
+
         return response([
             'data'    => new ProductReviewResource($review),
             'message' => trans('Apis::app.admin.customers.reviews.update-success'),
@@ -66,6 +70,8 @@ class ReviewController extends BaseController
         $this->getRepositoryInstance()->delete($id);
 
         Event::dispatch('customer.review.delete.after', $id);
+
+        Cache::tags(ApiCacheKey::API_SHOP_PRODUCTS_COMMENTS)->flush();
 
         return response([
             'message' => trans('Apis::app.admin.customers.reviews.delete-success'),
@@ -91,6 +97,8 @@ class ReviewController extends BaseController
             Event::dispatch('customer.review.update.after', $review);
         }
 
+        Cache::tags(ApiCacheKey::API_SHOP_PRODUCTS_COMMENTS)->flush();
+
         return response([
             'message' => trans('Apis::app.admin.customers.reviews.mass-operations.update-success'),
         ]);
@@ -113,6 +121,8 @@ class ReviewController extends BaseController
             Event::dispatch('customer.review.delete.after', $index);
         }
 
+        Cache::tags(ApiCacheKey::API_SHOP_PRODUCTS_COMMENTS)->flush();
+
         return response([
             'message' => trans('Apis::app.admin.customers.reviews.mass-operations.delete-success'),
         ]);
@@ -132,6 +142,9 @@ class ReviewController extends BaseController
 
         try {
             Excel::import(new ProductReviewImport, $request->file('file'));
+
+            //clear cache by product id
+            Cache::tags(ApiCacheKey::API_SHOP_PRODUCTS_COMMENTS)->flush();
 
             return response()->json([
                 'message' => 'Product reviews imported successfully.',
