@@ -714,7 +714,7 @@ class CartController extends CustomerController
         }
 
         $input['payment_vault'] = isset($input['payment_vault']) ? $input['payment_vault'] : "0";
-        $paypal_vault = Session::get('paypal_vault');
+        $paypal_vault_id = isset($input['paypal_vault_id']) ? $input['paypal_vault_id'] : "";
 
         if ($input['payment_vault'] == '1') {
             // for vault
