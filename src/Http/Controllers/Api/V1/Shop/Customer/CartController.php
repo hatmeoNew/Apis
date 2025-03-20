@@ -435,8 +435,6 @@ class CartController extends CustomerController
         try {
             $order = $this->smartButton->createOrder($this->buildRequestBody($input));
 
-            
-
             //$order_utm = $this->orderUtmRepository->create($order_utm);
 
 
@@ -632,12 +630,14 @@ class CartController extends CustomerController
      * @link https://developer.paypal.com/docs/multiparty/checkout/save-payment-methods/during-purchase/js-sdk/paypal/
      *
      */
-    protected function buildRequestBody()
+    protected function buildRequestBody($input)
     {
         $cart = \Webkul\Checkout\Facades\Cart::getCart();
 
 
         $billingAddressLines = $this->getAddressLines($cart->billing_address->address1);
+
+        $paypal_credit_card = isset($input['paypal_credit_card']) ? $input['paypal_credit_card'] : 0;
 
         $data = [
             'intent' => 'CAPTURE',
@@ -711,6 +711,51 @@ class CartController extends CustomerController
                 ],
             ]);
             */
+        }
+
+        $input['payment_vault'] = isset($input['payment_vault']) ? $input['payment_vault'] : "0";
+        $paypal_vault = Session::get('paypal_vault');
+
+        if ($input['payment_vault'] == '1') {
+            // for vault
+            // for credit card
+            if ($paypal_credit_card == "1") {
+                // create a empty card object
+                $card = new \stdClass();
+                $data["payment_source"] = [
+                    'card' => $card,
+                    'experience_context' => [
+                        'return_url' => $input['payment_return_url'],
+                        'cancel_url' => $input['payment_cancel_url'],
+                    ]
+                ];
+            } elseif (!empty($paypal_vault_id)) {
+                $data["payment_source"] = [
+                    "paypal" => [
+                        "vault_id" => $paypal_vault_id,
+                        "experience_context" => [
+                            "return_url" => $input['payment_return_url'],
+                            'cancel_url' => $input['payment_cancel_url'],
+                        ]
+                    ]
+                ];
+            } else {
+                $data["payment_source"] = [
+                    "paypal" => [
+                        "attributes" => [
+                            "vault" => [
+                                "store_in_vault" => "ON_SUCCESS",
+                                "usage_type" => "MERCHANT",
+                                "customer_type" => "CONSUMER"
+                            ]
+                        ],
+                        "experience_context" => [
+                            "return_url" => $input['payment_return_url'],
+                            'cancel_url' => $input['payment_cancel_url'],
+                        ]
+                    ]
+                ];
+            }
         }
 
 
