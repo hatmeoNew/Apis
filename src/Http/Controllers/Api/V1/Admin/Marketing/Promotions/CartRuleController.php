@@ -5,6 +5,7 @@ namespace NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Marketing\Promotions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Webkul\CartRule\Repositories\CartRuleRepository;
+use Webkul\CartRule\Repositories\CartRuleProductRepository;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Marketing\MarketingController;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Marketing\Promotions\CartRuleResource;
 use Illuminate\Support\Facades\Redis;
@@ -314,6 +315,7 @@ class CartRuleController extends MarketingController
         ]);
 
         $cartRule = app(\Webkul\CartRule\Repositories\CartRuleRepository::class);
+        $cartRuleProduct = app(\Webkul\CartRule\Repositories\CartRuleProductRepository::class);
 
         $rules = $request->rules;
 
@@ -379,9 +381,6 @@ class CartRuleController extends MarketingController
             //if($qty == 1) {} continue;
 
             $id = $rule['id'];
-
-
-
             $cartRuleData['discount_amount'] = $discount_amount;
             $cartRuleData['status'] = $status;
             $cartRuleData['discount_quantity'] = $qty;
@@ -393,11 +392,6 @@ class CartRuleController extends MarketingController
                 if($price == null){
                     return response()->json(['message' => 'ERROR Cart RULE UPDATE'], 400);
                 }
-
-                
-
-
-
                 // update the rule
                 //$cartRule = $this->getRepositoryInstance()->findOrFail($id);
 
@@ -421,9 +415,6 @@ class CartRuleController extends MarketingController
                     }
                 }
 
-
-
-
                 Event::dispatch('promotions.cart_rule.update.before', $id);
 
                 $cartRule = $this->getRepositoryInstance()->update($cartRuleData, $id);
@@ -442,6 +433,18 @@ class CartRuleController extends MarketingController
             Redis::sadd('product-quantity-rules-'.$product_id, $cartRule->id);
 
             Redis::zadd('product-quantity-price-'.$product_id, $rule['price'], $cartRule->id);
+
+            // add the product to the cart_rule_product table if not exists
+            $cartRuleProductInfo = $cartRuleProduct->findOneWhere([
+                'cart_rule_id' => $cartRule->id,
+                'product_id' => $product_id
+            ]);
+            if(!$cartRuleProductInfo) {
+                $cartRuleProduct->create([
+                    'cart_rule_id' => $cartRule->id,
+                    'product_id' => $product_id
+                ]);
+            }
         }
 
         // clear the cache in redis
@@ -454,6 +457,8 @@ class CartRuleController extends MarketingController
         Cache::forget("product_ext_".$product->id."_2_".$currency);
         Cache::forget("product_ext_".$product->id."_3_".$currency);
         Cache::forget("product_ext_".$product->id."_4_".$currency);
+
+        
 
         return response([
             'data' => $rules,
