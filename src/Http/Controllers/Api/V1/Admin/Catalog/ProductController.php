@@ -427,7 +427,9 @@ class ProductController extends CatalogController
 
             DB::commit();
 
+            // clean admin cache
             Cache::tags([ApiCacheKey::API_ADMIN_PRODUCTS])->flush();
+            // clean shop cache
             Cache::tags([ApiCacheKey::API_SHOP_PRODUCTS])->flush();
 
             return response([
