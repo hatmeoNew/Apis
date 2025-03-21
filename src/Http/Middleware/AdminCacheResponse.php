@@ -19,7 +19,7 @@ class AdminCacheResponse
     public function handle($request, Closure $next, $cacheTime = 1 * 24 * 3600, ...$tags)
     {
         // if the debug mode is on, then don't cache the response
-        if (!config('app.debug')) {
+        if (config('app.debug')) {
             return $next($request);
         }
 
@@ -43,7 +43,8 @@ class AdminCacheResponse
         return $response;
     }
 
-    private function makePageCacheKey($url){
-        return 'api_cache_' . Str::slug($url);
+    protected function makePageCacheKey($url)
+    {
+        return md5($url);
     }
 }
