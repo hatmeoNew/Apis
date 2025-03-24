@@ -24,6 +24,9 @@ class CategoryProductResource extends JsonResource
         /* get type instance */
         $productTypeInstance = $product->getTypeInstance();
         
+        $packages_package = [];
+        $sell_points = [];
+        
         /* generating resource */
         return [
             /* product's information */
