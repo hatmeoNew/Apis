@@ -1,0 +1,35 @@
+<?php
+namespace NexaMerchant\Apis\Http\Middleware;
+
+use Closure;
+
+class AdminOptionLog
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        try {
+
+            $user_id = auth()->user()->id;
+            $log = [
+                'user_id' => $user_id,
+                'path'    => substr($request->path(), 0, 255),
+                'method'  => $request->method(),
+                'ip'      => $request->getClientIp(),
+                'input'   => json_encode($request->input()),
+            ];
+
+            \Nicelizhi\Manage\Models\AdminOperationLog::create($log);
+            
+        } catch (\Exception $exception) {
+            // pass
+        }
+        return $next($request);
+    }
+}

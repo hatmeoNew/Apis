@@ -24,7 +24,7 @@ class ApisServiceProvider extends ServiceProvider
         'sanctum.currency' => \NexaMerchant\Apis\Http\Middleware\CurrencyMiddleware::class,
         'cache.response'   => \NexaMerchant\Apis\Http\Middleware\CacheResponse::class,
         'admin.cache.response'   => \NexaMerchant\Apis\Http\Middleware\AdminCacheResponse::class,
-        'admin_option_log' => \Nicelizhi\Manage\Http\Middleware\AdminOptionLog::class,
+        'admin_option_log' => \NexaMerchant\Apis\Http\Middleware\AdminOptionLog::class,
     ];
 
     /**
