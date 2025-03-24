@@ -41,7 +41,7 @@ class CategoryResource extends AdminCategoryResource
             'status'             => $category->status,
             'products_count'     => $category->products_count,
             'parent_id'          => $category->parent_id,
-            'products'           => ProductResource::collection($products), // limit 10
+            'products'           => CategoryProductResource::collection($products), // limit 10
             'created_at'         => $category->created_at,
             'updated_at'         => $category->updated_at,
         ];
