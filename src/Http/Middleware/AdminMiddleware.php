@@ -2,7 +2,6 @@
 
 namespace NexaMerchant\Apis\Http\Middleware;
 
-use Illuminate\Support\Facades\Log;
 use Closure;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Illuminate\Http\Request;
@@ -29,10 +28,6 @@ class AdminMiddleware
 
             return $next($request);
         }
-
-        Log::info('AdminMiddleware', [
-            'request' => $request->all(),
-        ]);
 
         /**
          * This is for token based authentication.
