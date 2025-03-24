@@ -11,6 +11,7 @@ use Webkul\Shop\Http\Middleware\Currency;
 use Webkul\Shop\Http\Middleware\Locale;
 use Webkul\Shop\Http\Middleware\Theme;
 use NexaMerchant\Apis\Http\Middleware\AssignRequestId;
+use Nicelizhi\Manage\Http\Middleware\AdminOptionLog;
 
 class ApisServiceProvider extends ServiceProvider
 {
@@ -46,6 +47,8 @@ class ApisServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'Apis');
 
         $router->aliasMiddleware('assign_request_id', AssignRequestId::class);
+
+        $router->aliasMiddleware('admin_option_log', AdminOptionLog::class);
         
 
         /*
