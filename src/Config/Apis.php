@@ -9,12 +9,12 @@ return [
      * 
      * The version of the package
      */
-    'version' => '1.1.4',
+    'version' => '1.1.5',
     /**
      * 
      * The version number of the package
      */
-    'versionNum' => '114',
+    'versionNum' => '115',
     /**
      * 
      * enable input log for all requests default is false

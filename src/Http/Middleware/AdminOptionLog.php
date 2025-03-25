@@ -3,6 +3,7 @@ namespace NexaMerchant\Apis\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class AdminOptionLog
 {
@@ -29,8 +30,9 @@ class AdminOptionLog
                 'input'   => json_encode($request->input()),
             ];
 
+            // save log use DB
 
-            \Nicelizhi\Manage\Models\AdminOperationLog::create($log);
+            DB::table('admin_operation_logs')->insert($log);
             
         } catch (\Exception $exception) {
             // pass
