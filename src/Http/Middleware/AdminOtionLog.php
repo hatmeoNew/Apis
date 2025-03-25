@@ -16,7 +16,7 @@ class AdminOptionLog
     {
         try {
 
-            $user_id = auth()->user()->id;
+            $user_id = auth()->guard('admin')->user()->id;
             $log = [
                 'user_id' => $user_id,
                 'path'    => substr($request->path(), 0, 255),

@@ -11,6 +11,7 @@ use Webkul\Shop\Http\Middleware\Currency;
 use Webkul\Shop\Http\Middleware\Locale;
 use Webkul\Shop\Http\Middleware\Theme;
 use NexaMerchant\Apis\Http\Middleware\AssignRequestId;
+use NexaMerchant\Apis\Http\Middleware\AdminOptionLog;
 
 class ApisServiceProvider extends ServiceProvider
 {
@@ -24,7 +25,6 @@ class ApisServiceProvider extends ServiceProvider
         'sanctum.currency' => \NexaMerchant\Apis\Http\Middleware\CurrencyMiddleware::class,
         'cache.response'   => \NexaMerchant\Apis\Http\Middleware\CacheResponse::class,
         'admin.cache.response'   => \NexaMerchant\Apis\Http\Middleware\AdminCacheResponse::class,
-        'admin_option_log' => \NexaMerchant\Apis\Http\Middleware\AdminOptionLog::class,
     ];
 
     /**
@@ -48,7 +48,7 @@ class ApisServiceProvider extends ServiceProvider
 
         $router->aliasMiddleware('assign_request_id', AssignRequestId::class);
 
-        //$router->aliasMiddleware('admin_option_log', AdminOptionLog::class);
+        $router->aliasMiddleware('api.admin.option.log', AdminOptionLog::class);
         
 
         /*
