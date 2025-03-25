@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix'     => 'api/v1/admin',
-    'middleware' => ['sanctum.locale','assign_request_id'],
+    'middleware' => ['sanctum.locale','assign_request_id','api.admin.option.log'],
 ], function () {
     /**
      * Authentication routes.
