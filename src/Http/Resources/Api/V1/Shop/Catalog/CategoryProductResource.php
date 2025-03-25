@@ -10,6 +10,26 @@ use Illuminate\Support\Facades\Redis;
 
 class CategoryProductResource extends JsonResource
 {
+
+    /**
+     * Product review helper.
+     *
+     * @var \Webkul\Product\Helpers\Review
+     */
+    protected $productReviewHelper;
+
+    /**
+     * Create a new resource instance.
+     *
+     * @return void
+     */
+    public function __construct($resource)
+    {
+        $this->productReviewHelper = app(\Webkul\Product\Helpers\Review::class);
+
+        parent::__construct($resource);
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -54,6 +74,14 @@ class CategoryProductResource extends JsonResource
             'gtag' => config('onebuy.gtag'),
 
             'sell_point' => $sell_points,
+
+            /* product's reviews */
+            'reviews' => [
+                'total'          => $total = $this->productReviewHelper->getTotalReviews($product),
+                'total_rating'   => $total ? $this->productReviewHelper->getTotalRating($product) : 0,
+                'average_rating' => $total ? $this->productReviewHelper->getAverageRating($product) : 0,
+                'percentage'     => $total ? json_encode($this->productReviewHelper->getPercentageRating($product)) : [],
+            ],
 
         ];
     }

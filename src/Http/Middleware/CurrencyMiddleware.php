@@ -24,13 +24,15 @@ class CurrencyMiddleware
     {
         $currencyCode = $request->header('x-currency');
 
-        if ($currencyCode && $this->currencyRepository->findOneByField('code', $currencyCode)) {
-            core()->setCurrentCurrency($currencyCode);
+        // if ($currencyCode && $this->currencyRepository->findOneByField('code', $currencyCode)) {
+        //     core()->setCurrentCurrency($currencyCode);
 
-            return $next($request);
-        }
+        //     return $next($request);
+        // }
 
-        core()->setCurrentCurrency(core()->getChannelBaseCurrencyCode());
+        $currencyCode = config('app.currency');
+
+        core()->setCurrentCurrency($currencyCode);
 
         return $next($request);
     }

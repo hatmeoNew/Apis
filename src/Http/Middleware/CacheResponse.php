@@ -4,8 +4,6 @@ namespace NexaMerchant\Apis\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use NexaMerchant\Apis\Enum\ApiCacheKey;
 
 class CacheResponse
@@ -41,7 +39,7 @@ class CacheResponse
         if (Cache::tags($tags)->has($cacheKey)) {
             $cacheData = Cache::tags($tags)->get($cacheKey);
             $cacheData = json_decode($cacheData, true);
-            return response()->json($cacheData)->header('X-Cache-Key', $cacheKey);
+            return response()->json($cacheData);
         }
 
         $response = $next($request);
