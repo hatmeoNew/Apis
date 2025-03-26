@@ -608,6 +608,11 @@ class ProductController extends CatalogController
         Redis::del('product-quantity-rules-'.$id);
         Redis::del('product-quantity-price-'.$id);
 
+        // clean admin cache
+        Cache::tags([ApiCacheKey::API_ADMIN_PRODUCTS])->flush();
+        // clean shop cache
+        Cache::tags([ApiCacheKey::API_SHOP_PRODUCTS])->flush();
+
         Event::dispatch('catalog.product.delete.after', $id);
 
         return response([
@@ -631,6 +636,11 @@ class ProductController extends CatalogController
 
             Event::dispatch('catalog.product.delete.after', $productId);
         }
+
+        // clean admin cache
+        Cache::tags([ApiCacheKey::API_ADMIN_PRODUCTS])->flush();
+        // clean shop cache
+        Cache::tags([ApiCacheKey::API_SHOP_PRODUCTS])->flush();
 
         return response([
             'message' => trans('Apis::app.admin.catalog.products.mass-operations.delete-success'),
@@ -657,6 +667,11 @@ class ProductController extends CatalogController
 
             Event::dispatch('catalog.product.update.after', $product);
         }
+
+        // clean admin cache
+        Cache::tags([ApiCacheKey::API_ADMIN_PRODUCTS])->flush();
+        // clean shop cache
+        Cache::tags([ApiCacheKey::API_SHOP_PRODUCTS])->flush();
 
         return response([
             'message' => trans('Apis::app.admin.catalog.products.mass-operations.update-success'),
