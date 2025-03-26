@@ -1,14 +1,15 @@
 <?php
 namespace NexaMerchant\Apis\Console\Commands;
+use Illuminate\Support\Facades\Artisan;
 
 use NexaMerchant\Apps\Console\Commands\CommandInterface;
 
-class UnInstall extends CommandInterface 
+class Version extends CommandInterface 
 
 {
-    protected $signature = 'Apis:uninstall';
+    protected $signature = 'Apis:Version';
 
-    protected $description = 'Uninstall Apis an app';
+    protected $description = 'Version of Apis';
 
     public function getAppVer() {
         return config("Apis.version");
@@ -20,10 +21,7 @@ class UnInstall extends CommandInterface
 
     public function handle()
     {
-        if (!$this->confirm('Do you wish to continue?')) {
-            // ...
-            $this->error("App Apis UnInstall cannelled");
-            return false;
-        }
+        // read the version from the config file
+        $this->info("Version: " . $this->getAppVer());
     }
 }

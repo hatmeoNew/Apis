@@ -12,7 +12,7 @@ class Install extends CommandInterface
     protected $description = 'Publish L5SwaggerServiceProvider provider, view and config files.';
 
     public function getAppVer() {
-        return config("Apis.ver");
+        return config("Apis.version");
     }
 
     public function getAppName() {

@@ -12,7 +12,7 @@ class TestEmail extends CommandInterface {
     protected $description = 'Test email sending';
 
     public function getAppVer() {
-        return config("Apis.ver");
+        return config("Apis.version");
     }
 
     public function getAppName() {
