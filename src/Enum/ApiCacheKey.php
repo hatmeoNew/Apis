@@ -28,6 +28,6 @@ class ApiCacheKey extends Enum
 
 
     const API_ADMIN_PRODUCTS = 'api_admin_products';
-    const API_ADMIN_CATEGORIES = 'api_admin_categories';
+    const API_ADMIN_CATEGORY = 'api_admin_categories';
     const API_ADMIN_ORDER = 'api_admin_order';
 }

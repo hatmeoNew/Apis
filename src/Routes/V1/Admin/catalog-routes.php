@@ -39,7 +39,7 @@ Route::group([
      * Category routes.
      */
     Route::controller(CategoryController::class)->prefix('categories')->group(function () {
-        Route::get('', 'allResources')->middleware('admin.cache.response:1200,'.ApiCacheKey::API_ADMIN_CATEGORIES.','.ApiCacheKey::API_ADMIN);
+        Route::get('', 'allResources')->middleware('admin.cache.response:1200,'.ApiCacheKey::API_ADMIN_CATEGORY.','.ApiCacheKey::API_ADMIN);
 
         Route::post('', 'store');
 

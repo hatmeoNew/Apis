@@ -60,6 +60,7 @@ class CategoryController extends CatalogController
 
         // clear cache
         Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
+        Cache::tags([ApiCacheKey::API_ADMIN_CATEGORY])->flush();
 
         return response([
             'data'    => new CategoryResource($category),
@@ -114,6 +115,7 @@ class CategoryController extends CatalogController
 
         // clear cache
         Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
+        Cache::tags([ApiCacheKey::API_ADMIN_CATEGORY])->flush();
 
         return response([
             'data'    => new CategoryResource($category),
@@ -141,6 +143,10 @@ class CategoryController extends CatalogController
         $this->getRepositoryInstance()->delete($id);
 
         Event::dispatch('catalog.category.delete.after', $id);
+
+        // clear cache
+        Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
+        Cache::tags([ApiCacheKey::API_ADMIN_CATEGORY])->flush();
 
         return response([
             'message' => trans('Apis::app.admin.catalog.categories.delete-success'),
@@ -170,6 +176,10 @@ class CategoryController extends CatalogController
             Event::dispatch('catalog.categories.mass-update.after', $category);
         }
 
+        // clear cache
+        Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
+        Cache::tags([ApiCacheKey::API_ADMIN_CATEGORY])->flush();
+
         return response([
             'message' => trans('Apis::app.admin.catalog.categories.mass-operations.update-success'),
         ]);
@@ -197,6 +207,10 @@ class CategoryController extends CatalogController
 
             Event::dispatch('catalog.category.delete.after', $category->id);
         });
+
+        // clear cache
+        Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
+        Cache::tags([ApiCacheKey::API_ADMIN_CATEGORY])->flush();
 
         return response([
             'message' => trans('Apis::app.admin.catalog.categories.mass-operations.delete-success'),
