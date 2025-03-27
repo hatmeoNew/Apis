@@ -16,7 +16,7 @@ Route::group([
      * Product routes.
      */
     Route::controller(ProductController::class)->prefix('products')->group(function () {
-        Route::get('', 'allResources')->middleware('admin.cache.response:1200,'.ApiCacheKey::API_ADMIN_PRODUCTS.','.ApiCacheKey::API_ADMIN);
+        Route::get('', 'allResources')->middleware('admin.cache.response:1200000,'.ApiCacheKey::API_ADMIN_PRODUCTS.','.ApiCacheKey::API_ADMIN);
 
         Route::post('', 'store');
 
@@ -39,7 +39,7 @@ Route::group([
      * Category routes.
      */
     Route::controller(CategoryController::class)->prefix('categories')->group(function () {
-        Route::get('', 'allResources')->middleware('admin.cache.response:1200,'.ApiCacheKey::API_ADMIN_CATEGORY.','.ApiCacheKey::API_ADMIN);
+        Route::get('', 'allResources')->middleware('admin.cache.response:12000000,'.ApiCacheKey::API_ADMIN_CATEGORY.','.ApiCacheKey::API_ADMIN);
 
         Route::post('', 'store');
 
