@@ -431,6 +431,7 @@ class ProductController extends CatalogController
             Cache::tags([ApiCacheKey::API_ADMIN_PRODUCTS])->flush();
             // clean shop cache
             Cache::tags([ApiCacheKey::API_SHOP_PRODUCTS])->flush();
+            Cache::tags(ApiCacheKey::API_SHOP_CATEGORY)->flush();
 
             return response([
                 'data'    => new ProductResource($product),
@@ -612,6 +613,7 @@ class ProductController extends CatalogController
         Cache::tags([ApiCacheKey::API_ADMIN_PRODUCTS])->flush();
         // clean shop cache
         Cache::tags([ApiCacheKey::API_SHOP_PRODUCTS])->flush();
+        Cache::tags(ApiCacheKey::API_SHOP_CATEGORY)->flush();
 
         Event::dispatch('catalog.product.delete.after', $id);
 
@@ -641,6 +643,7 @@ class ProductController extends CatalogController
         Cache::tags([ApiCacheKey::API_ADMIN_PRODUCTS])->flush();
         // clean shop cache
         Cache::tags([ApiCacheKey::API_SHOP_PRODUCTS])->flush();
+        Cache::tags(ApiCacheKey::API_SHOP_CATEGORY)->flush();
 
         return response([
             'message' => trans('Apis::app.admin.catalog.products.mass-operations.delete-success'),
@@ -672,6 +675,7 @@ class ProductController extends CatalogController
         Cache::tags([ApiCacheKey::API_ADMIN_PRODUCTS])->flush();
         // clean shop cache
         Cache::tags([ApiCacheKey::API_SHOP_PRODUCTS])->flush();
+        Cache::tags(ApiCacheKey::API_SHOP_CATEGORY)->flush();
 
         return response([
             'message' => trans('Apis::app.admin.catalog.products.mass-operations.update-success'),

@@ -257,6 +257,7 @@ class TemplateController extends Controller
 
         // clear the cache by tag
         Cache::tags(ApiCacheKey::API_SHOP_PRODUCTS)->flush();
+        Cache::tags(ApiCacheKey::API_SHOP_CATEGORY)->flush();
 
 
         if($template){
