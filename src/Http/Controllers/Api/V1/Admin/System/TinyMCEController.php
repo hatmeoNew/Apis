@@ -48,7 +48,7 @@ class TinyMCEController extends AdminController
         $file_name = $file->getClientOriginalName();
 
         // when the file is image, we will convert it to webp and save webp file.
-        if (in_array($file->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif'])) {
+        if (in_array($file->getClientOriginalExtension(), ['jpg', 'jpeg', 'png'])) {
             $path = $this->convertToWebp($path);
         }
 
