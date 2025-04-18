@@ -23,7 +23,7 @@ class ProductReviewResource extends JsonResource
             'name'       => $this->name,
             'status'     => $this->status,
             'images'     => $this->images,
-            'product'    => new ProductResource($this->product),
+            'product'    => new ReviewProductResource($this->product),
             'customer'   => $this->when($this->customer_id, new CustomerResource($this->customer)),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
