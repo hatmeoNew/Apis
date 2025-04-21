@@ -163,7 +163,7 @@ class ProductController extends CatalogController
                     if (!empty($config['tool_recommend'])) {
                         foreach ($config['tool_recommend'] as $product) {
                             $product_id = $product['product_id'];
-                            $product_list[] = DB::table('products')->where('id', $product_id)->first();
+                            $product_list[] = $this->getRepositoryInstance()->find($product_id);
                         }
                     }
 
