@@ -163,7 +163,10 @@ class ProductController extends CatalogController
                     if (!empty($config['tool_recommend'])) {
                         foreach ($config['tool_recommend'] as $product) {
                             $product_id = $product['product_id'];
-                            $product_list[] = $this->getRepositoryInstance()->find($product_id);
+                            $product_list[] = $this->getRepositoryInstance()
+                                ->with(['images', 'attribute_values'])
+                                ->find($product_id);
+
                         }
                     }
 
