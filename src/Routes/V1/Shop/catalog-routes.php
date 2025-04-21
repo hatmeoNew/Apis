@@ -11,9 +11,10 @@ use NexaMerchant\Apis\Enum\ApiCacheKey;
 /**
  * Product routes.
  */
-Route::controller(ProductController::class)->prefix('products')->middleware('cache.response:360000,'.ApiCacheKey::API_SHOP_PRODUCTS.','.ApiCacheKey::API_SHOP)->group(function () {
+Route::controller(ProductController::class)->prefix('products')->middleware('cache.response:360000,' . ApiCacheKey::API_SHOP_PRODUCTS . ',' . ApiCacheKey::API_SHOP)->group(function () {
 
     Route::get('get-index/{template_id}', 'getIndexContent');
+
     Route::get('get-recommend/{product_id}', 'getRecommend');
 
     Route::get('', 'allResources');
@@ -25,9 +26,6 @@ Route::controller(ProductController::class)->prefix('products')->middleware('cac
     Route::get('{id}/additional-information', 'additionalInformation');
 
     Route::get('{id}/configurable-config', 'configurableConfig');
-
-    
-
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function () {
@@ -42,14 +40,13 @@ Route::group(['middleware' => ['auth:sanctum', 'sanctum.customer']], function ()
 /**
  * Category routes.
  */
-Route::controller(CategoryController::class)->prefix('categories')->middleware('cache.response:360000,'.ApiCacheKey::API_SHOP_CATEGORY.','.ApiCacheKey::API_SHOP)->group(function () {
+Route::controller(CategoryController::class)->prefix('categories')->middleware('cache.response:360000,' . ApiCacheKey::API_SHOP_CATEGORY . ',' . ApiCacheKey::API_SHOP)->group(function () {
     Route::get('', 'allResources');
 
     Route::get('{id}', 'getResource');
     Route::get('get-cms/{id}', 'getCmsList');
     Route::get('cms-detail/{templateId}', 'getCmsDetail');
     Route::Post('email', 'addEmail');
-
 });
 
 /**
