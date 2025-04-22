@@ -133,10 +133,7 @@ class ProductController extends CatalogController
                     $recommend_product = [];
                     foreach ($recommend as $key1 => $value1) {
 
-
-
                         $product_info = DB::table('product_flat')->where('product_id', $value1['product_id'])->select('id', 'name', 'price', 'url_key')->first();
-
 
                         if (!empty($product_info)) {
                             $recommend_product[$key1]['product_id'] =  $value1['product_id'];
@@ -163,19 +160,8 @@ class ProductController extends CatalogController
                     if (!empty($config['tool_recommend'])) {
                         foreach ($config['tool_recommend'] as $product) {
                             $product_id = $product['product_id'];
-                            $product = $this->getRepositoryInstance()
-                                ->with(['images', 'super_attributes'])
-                                ->find($product_id);
-
-                            $product_package = $product->type == 'configurable' ? \Nicelizhi\OneBuy\Helpers\Utils::makeProducts($product, [2, 1, 3, 4]) : [];
-
-                            $product_list[] = [
-                                'id' => $product->id,
-                                'name' => $product->name,
-                                'images' => $product->images,
-                                'super_attributes' => $product->super_attributes,
-                                'product_package' => $product_package,
-                            ];
+                            $product = $this->getRepositoryInstance()->find($product_id);
+                            $product_list[] = ProductResource::make($product);
                         }
                     }
 
