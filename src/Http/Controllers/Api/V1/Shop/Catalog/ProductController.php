@@ -163,10 +163,13 @@ class ProductController extends CatalogController
                     if (!empty($config['tool_recommend'])) {
                         foreach ($config['tool_recommend'] as $product) {
                             $product_id = $product['product_id'];
-                            $product_list[] = $this->getRepositoryInstance()
-                                ->with(['images', 'attribute_values'])
+                            $product = $this->getRepositoryInstance()
+                                ->with(['images', 'super_attributes'])
                                 ->find($product_id);
 
+                            $product['product_package'] = $product->type == 'configurable' ? \Nicelizhi\OneBuy\Helpers\Utils::makeProducts($product, [2, 1, 3, 4]) : [];
+
+                            $product_list[] = $product;
                         }
                     }
 
