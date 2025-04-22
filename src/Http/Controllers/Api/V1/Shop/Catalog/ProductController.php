@@ -167,9 +167,15 @@ class ProductController extends CatalogController
                                 ->with(['images', 'super_attributes'])
                                 ->find($product_id);
 
-                            $product['product_package'] = $product->type == 'configurable' ? \Nicelizhi\OneBuy\Helpers\Utils::makeProducts($product, [2, 1, 3, 4]) : [];
+                            $product_package = $product->type == 'configurable' ? \Nicelizhi\OneBuy\Helpers\Utils::makeProducts($product, [2, 1, 3, 4]) : [];
 
-                            $product_list[] = $product;
+                            $product_list[] = [
+                                'id' => $product->id,
+                                'name' => $product->name,
+                                'images' => $product->images,
+                                'super_attributes' => $product->super_attributes,
+                                'product_package' => $product_package,
+                            ];
                         }
                     }
 
