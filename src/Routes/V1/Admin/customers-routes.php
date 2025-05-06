@@ -41,7 +41,7 @@ Route::group([
 
         Route::post('mass-update', 'massUpdate');
 
-        Route::post('import/{product_id}', 'import'); // add import method
+        Route::post('import', 'import'); // add import method
     });
 
     /**

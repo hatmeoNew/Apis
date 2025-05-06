@@ -43,7 +43,7 @@ class ReviewController extends BaseController
             "rating" => "numeric|min:1|max:5",
             "sort" => "numeric|min:1|max:100",
         ]);
-        
+
         Event::dispatch('customer.review.update.before', $id);
 
         $review = $this->getRepositoryInstance()->update(request()->only(['status','sort','rating']), $id);
@@ -129,18 +129,42 @@ class ReviewController extends BaseController
     }
 
     /**
-     * 
+     *
      * product id import a xls file
-     * 
+     *
      * upload a xls file to import its products review
      */
-    public function import(Request $request, $product_id) {
+    public function import(Request $request) {
 
         $this->validate(request(), [
             'file' => 'required|mimes:xls,xlsx',
         ]);
 
         try {
+
+            // 读取 Excel 文件
+            $data = Excel::toArray([], $request->file('file'));
+            $errors = [];
+
+            // 遍历每一行数据进行校验
+            foreach ($data[0] as $rowIndex => $row) {
+                $validator = \Illuminate\Support\Facades\Validator::make($row, [
+                    'product_id' => 'required|exists:products,id',
+                ]);
+
+                if ($validator->fails()) {
+                    $errors[$rowIndex + 1] = $validator->errors()->all();
+                }
+            }
+
+            // 如果有错误，返回错误信息
+            if (!empty($errors)) {
+                return response()->json([
+                    'message' => '数据存在不符合要求的行',
+                    'errors' => $errors
+                ], 422);
+            }
+
             Excel::import(new ProductReviewImport, $request->file('file'));
 
             //clear cache by product id
