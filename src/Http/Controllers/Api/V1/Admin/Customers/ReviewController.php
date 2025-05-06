@@ -154,8 +154,17 @@ class ReviewController extends BaseController
                     continue;
                 }
 
-                if (!Product::where('id', $row[0])->exists()) {
-                    $errors[$rowIndex + 1] = 'Product ID ' . $row[0] . ' does not exist.';
+                // 如果$row全部为空，则跳过该行
+                if (empty($row[0]) && empty($row[1]) && empty($row[2]) && empty($row[3]) && empty($row[4]) && empty($row[5]) && empty($row[6])) {
+                    continue;
+                }
+
+                if (empty($row[0])) {
+                    $errors[$rowIndex + 1] = 'Product ID is required.';
+                } else {
+                    if (!Product::where('id', $row[0])->exists()) {
+                        $errors[$rowIndex + 1] = 'Product ID ' . $row[0] . ' does not exist.';
+                    }
                 }
 
                 if (empty($row[2])) {
