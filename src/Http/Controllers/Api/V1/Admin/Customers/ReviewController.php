@@ -12,6 +12,7 @@ use NexaMerchant\Apis\Imports\ProductReviewImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
 use NexaMerchant\Apis\Enum\ApiCacheKey;
+use Webkul\Product\Models\Product;
 
 class ReviewController extends BaseController
 {
@@ -148,13 +149,19 @@ class ReviewController extends BaseController
 
             // 遍历每一行数据进行校验
             foreach ($data[0] as $rowIndex => $row) {
-                $validator = \Illuminate\Support\Facades\Validator::make($row, [
-                    'product_id' => 'required|exists:products,id',
-                ]);
-
-                if ($validator->fails()) {
-                    $errors[$rowIndex + 1] = $validator->errors()->all();
+                // 跳过表头
+                if ($rowIndex === 0) {
+                    continue;
                 }
+
+                if (!Product::where('id', $row[0])->exists()) {
+                    $errors[$rowIndex + 1] = 'Product ID ' . $row[0] . ' does not exist.';
+                }
+
+                if (empty($row[2])) {
+                    $errors[$rowIndex + 1] = 'Customer email is required.';
+                }
+
             }
 
             // 如果有错误，返回错误信息
