@@ -60,4 +60,6 @@ Route::group([
      * System routes.
      */
     require 'template-routes.php';
+
+    require 'country-routes.php';
 });
