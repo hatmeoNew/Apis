@@ -50,9 +50,9 @@ class ProductController extends CatalogController
     }
 
     /**
-     * 
+     *
      * Quick Create a new product.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function quickCreate(Request $request){
@@ -67,7 +67,7 @@ class ProductController extends CatalogController
                 $request->validate([
                     'sku'=> ['required', 'unique:products,sku', new Slug],
                 ]);
-            }        
+            }
 
             $input = [];
             $input['sku'] = $req['sku'];
@@ -113,7 +113,7 @@ class ProductController extends CatalogController
                 $attributeGroupItems = $attributeGroupRepository->where('attribute_family_id', $attributeFamily->id)->limit(1)->get();
 
                 //var_dump($attributeGroupItems);exit;
-                
+
                 foreach($attributeGroupItems as $attributeGroupItem) {
                     $attributeGroupMapping = DB::table('attribute_group_mappings')->where("attribute_id", )->where("attribute_group_id", $attributeGroupItem->id)->first();
                     if(!$attributeGroupMapping){
@@ -130,7 +130,7 @@ class ProductController extends CatalogController
                             $attributeGroupMappingDatas[] = $attributeGroupMappingData;
                         }
                         DB::table('attribute_group_mappings')->insert($attributeGroupMappingDatas);
-                        
+
                     }
                     $attribute_group_id = $attributeGroupItem->id;
                 }
@@ -152,7 +152,7 @@ class ProductController extends CatalogController
                 $super_attributes_label[$attribute['position']] = $code;
 
                 // create a unique code for the attribute
-                
+
                 $attributeRepos = $attributeRepository->findOneByField('code', $code);
                 //var_dump($attributeRepos);exit;
                 if(!$attributeRepos){
@@ -193,7 +193,7 @@ class ProductController extends CatalogController
 
                 //var_dump($attributeOptionItems->toArray());exit;
 
-                
+
 
                 foreach ($attribute['values'] as $option) {
 
@@ -224,7 +224,7 @@ class ProductController extends CatalogController
                     }
                 }
 
-                
+
 
                 // delete the attribute option
                 if(count($attributeOptionDeleted)){
@@ -232,13 +232,13 @@ class ProductController extends CatalogController
                     $deleteAttrOption = $attributeOptionRepository->WhereIn('admin_name', $attributeOptionDeleted)->where('attribute_id', $attributeRepos->id)->delete();
                     //var_dump($deleteAttrOption);
 
-                    
+
 
                 }
 
                 //var_dump($attributeOptionArray,$super_attributes_ids);exit;
 
-                
+
             }
 
             //var_dump($attributeOptionDeleted, $super_attributes_ids_deleted, $super_attributes_ids);exit;
@@ -246,7 +246,7 @@ class ProductController extends CatalogController
             $input['super_attributes'] = $super_attributes;
             $input['channel'] = Core()->getCurrentChannel()->code;
             $input['locale'] = Core()->getCurrentLocale()->code;
-        
+
 
             //add attribut id to attribute_group_mappings
             $attributeGroupMappingRespos = app();
@@ -274,7 +274,7 @@ class ProductController extends CatalogController
 
                 // delete the product super attributes info
                 DB::table('product_super_attributes')->where('product_id', $req['id'])->delete();
-                
+
                 //$product->update($input);
                 $id = $req['id'];
 
@@ -296,7 +296,7 @@ class ProductController extends CatalogController
                 Event::dispatch('catalog.product.create.after', $product);
                 $id = $product->id;
             }
-            
+
             $multiselectAttributeCodes = [];
             $productAttributes = $this->getRepositoryInstance()->findOrFail($id);
 
@@ -321,14 +321,14 @@ class ProductController extends CatalogController
             }
 
             // match the variants to the sku id
-        
+
             // print_r($categories);
             $i = 0;
             foreach($skus as $key=>$sku) {
                 $Variant = [];
                 $sku['sku'] = !empty($sku['sku']) ? $sku['sku'] : $sku['label'];
-                
-                $Variant['name'] = $sku['label']; 
+
+                $Variant['name'] = $sku['label'];
                 $Variant['price'] = $sku['price'];
                 $Variant['weight'] = "1000";
                 $Variant['status'] = $req['status'];
@@ -353,7 +353,7 @@ class ProductController extends CatalogController
                 if($option1) $Variant[$option1] = $this->findAttributeOptionID($option1, $sku['option1']);
                 if($option2) $Variant[$option2] = $this->findAttributeOptionID($option2, $sku['option2']);
                 if($option3) $Variant[$option3] = $this->findAttributeOptionID($option3, $sku['option3']);
-                
+
                 if(empty($sku['id'])) {
                     //$Variant['sku'] = $input['sku'].'-'. $sku['sku'];
                     $Variant['sku'] = $sku['sku'];
@@ -372,6 +372,7 @@ class ProductController extends CatalogController
             $tableData['url_key'] = isset($req['url_key']) ? $req['url_key'] : $req['sku'];
             $tableData['name'] = $req['name'];
             $tableData['new'] = 1;
+            $tableData['sku'] = $req['sku'];
             $tableData['guest_checkout'] = 1;
             $tableData['status'] = $req['status'];
             $tableData['description'] = $req['description'];
@@ -408,7 +409,7 @@ class ProductController extends CatalogController
 
             $product->images()->createMany($productImages);
 
-            
+
 
             // add images to the variants
             $variants = $product->variants()->get();
@@ -598,9 +599,9 @@ class ProductController extends CatalogController
         // delete the product rules
         $rules = Redis::smembers('product-quantity-rules-'.$id);
         $cartrulerepository = app('Webkul\CartRule\Repositories\CartRuleRepository');
-        
+
         foreach($rules as $rule) {
-            
+
             // delete the rule
             $cartrulerepository->delete($rule);
         }
