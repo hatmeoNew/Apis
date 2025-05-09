@@ -61,7 +61,7 @@ class ProductReviewImport implements ToModel, WithHeadingRow {
         $productReview->save();
 
         // if the images are provided and add images url to the product review attachments
-        if (isset($row['images'])) {
+        if (!empty($row['images'])) {
             $images = explode(',', $row['images']);
             foreach ($images as $image) {
                 $productReview->images()->create([
@@ -70,7 +70,7 @@ class ProductReviewImport implements ToModel, WithHeadingRow {
                     'mime_type' => 'jpeg',
                 ]);
 
-                
+
             }
         }
     }

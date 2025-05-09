@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Country\CountryController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Country\CountryStateController;
 
-// Route::group(['middleware' => ['auth:sanctum', 'sanctum.admin']], function () {
+Route::group(['middleware' => ['auth:sanctum', 'sanctum.admin']], function () {
     /**
      * CMS page routes.
      */
@@ -24,4 +24,4 @@ use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Country\CountryStateControll
         Route::put('country-states/{id}', [CountryStateController::class, 'update']);     // 更新州
         Route::delete('country-states/{id}', [CountryStateController::class, 'destroy']); // 删除州
     });
-// });
+});
