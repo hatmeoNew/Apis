@@ -80,7 +80,7 @@ class CountryStateController extends Controller
         ]);
 
         $state = CountryState::create($validated);
-        return response()->json($state, 201);
+        return response()->json($state, 200);
     }
 
     public function update(Request $request, $id)

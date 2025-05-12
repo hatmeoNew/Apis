@@ -44,7 +44,7 @@ class CountryController extends AdminController
         ]);
 
         $country = Country::create($validated);
-        return response()->json($country, 201);
+        return response()->json($country, 200);
     }
 
     public function update(Request $request, $id)
