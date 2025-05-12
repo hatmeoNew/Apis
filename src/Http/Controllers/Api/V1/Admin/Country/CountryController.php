@@ -4,13 +4,30 @@ namespace NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Country;
 
 use Illuminate\Http\Request;
 use Webkul\Core\Models\Country;
-use Illuminate\Routing\Controller;
+use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\AdminController;
 
-class CountryController extends Controller
+class CountryController extends AdminController
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Country::all());
+        $query = Country::query();
+
+        if ($search = $request->input('code')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%");
+            });
+        }
+
+        if ($search = $request->input('name')) {
+            $query->where(function ($q) use ($search) {
+                $q->Where('name', 'like', "%{$search}%");
+            });
+        }
+
+        $perPage = $request->input('per_page', 20); // 默认每页 20 条
+        $countries = $query->paginate($perPage);
+
+        return response()->json($countries);
     }
 
     public function show($id)

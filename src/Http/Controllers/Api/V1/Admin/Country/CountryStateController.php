@@ -8,9 +8,32 @@ use Illuminate\Routing\Controller;
 
 class CountryStateController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(CountryState::all());
+        $query = CountryState::query();
+
+        if ($search = $request->input('code')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%");
+            });
+        }
+
+        if ($search = $request->input('default_name')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('default_name', 'like', "%{$search}%");
+            });
+        }
+
+        if ($search = $request->input('country_code')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('country_code', 'like', "%{$search}%");
+            });
+        }
+
+        $perPage = $request->input('per_page', 20); // 默认每页 20 条
+        $states = $query->paginate($perPage);
+
+        return response()->json($states);
     }
 
     public function show($id)
@@ -18,9 +41,26 @@ class CountryStateController extends Controller
         return response()->json(CountryState::findOrFail($id));
     }
 
-    public function getByCountryCode($countryCode)
+    public function getByCountryCode(Request $request, $countryCode)
     {
-        $states = CountryState::where('country_code', $countryCode)->get();
+        $query = CountryState::where('country_code', $countryCode);
+
+        if ($request->input('code')) {
+            $search = $request->input('code');
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->input('default_name')) {
+            $search = $request->input('default_name');
+            $query->where(function ($q) use ($search) {
+                $q->where('default_name', 'like', "%{$search}%");
+            });
+        }
+
+        $perPage = $request->input('per_page', 20);
+        $states = $query->paginate($perPage);
 
         if ($states->isEmpty()) {
             return response()->json(['message' => 'No states found for this country.'], 404);
@@ -33,7 +73,9 @@ class CountryStateController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'country_id' => 'required|exists:countries,id',
             'country_code' => 'required|exists:countries,code',
+            'code' => 'required|string',
             'default_name' => 'required|string',
         ]);
 
