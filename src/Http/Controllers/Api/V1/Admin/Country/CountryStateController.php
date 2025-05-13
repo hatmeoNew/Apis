@@ -62,10 +62,6 @@ class CountryStateController extends Controller
         $perPage = $request->input('per_page', 20);
         $states = $query->paginate($perPage);
 
-        if ($states->isEmpty()) {
-            return response()->json(['message' => 'No states found for this country.'], 404);
-        }
-
         return response()->json($states);
     }
 
