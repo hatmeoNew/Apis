@@ -30,7 +30,7 @@ class ProductResource extends JsonResource
 
             'sku' => $this->resource->sku,
 
-            // need filter 
+            // need filter
             'super_attributes' => $this->super_attributes->map(function ($attribute) {
                 // need filter the product have the attribute
                 return [
@@ -57,6 +57,7 @@ class ProductResource extends JsonResource
                 return [
                     'id'    => $variant->id,
                     'sku'   => $variant->sku,
+                    'custom_sku' => $variant->custom_sku,
                     'price' => $variant->price,
                     'stock' => $variant->stock,
                     'name'  => $variant->name,
