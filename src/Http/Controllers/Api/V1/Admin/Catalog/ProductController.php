@@ -354,6 +354,7 @@ class ProductController extends CatalogController
                 if($option2) $Variant[$option2] = $this->findAttributeOptionID($option2, $sku['option2']);
                 if($option3) $Variant[$option3] = $this->findAttributeOptionID($option3, $sku['option3']);
 
+                $Variant['custom_sku'] = $sku['custom_sku'] ?? '';
                 if(empty($sku['id'])) {
                     //$Variant['sku'] = $input['sku'].'-'. $sku['sku'];
                     $Variant['sku'] = $sku['sku'];
@@ -364,7 +365,6 @@ class ProductController extends CatalogController
                     $Variant['sku'] = $sku['sku'];
                     $Variants[$sku['id']] = $Variant;
                 }
-                $Variant['custom_sku'] = $sku['custom_sku'] ?? '';
             }
 
             $tableData['channel'] = Core()->getCurrentChannel()->code;
