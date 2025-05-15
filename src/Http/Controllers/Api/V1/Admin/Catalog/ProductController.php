@@ -364,6 +364,7 @@ class ProductController extends CatalogController
                     $Variant['sku'] = $sku['sku'];
                     $Variants[$sku['id']] = $Variant;
                 }
+                $Variant['custom_sku'] = $sku['custom_sku'] ?? '';
             }
 
             $tableData['channel'] = Core()->getCurrentChannel()->code;
