@@ -8,6 +8,8 @@ use Nicelizhi\Manage\Http\Requests\MassDestroyRequest;
 use Webkul\CMS\Repositories\CmsRepository as PageRepository; // Change this line
 use Webkul\Core\Rules\Slug;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Cache;
+use NexaMerchant\Apis\Enum\ApiCacheKey;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\CMS\PageResource;
 
 class PageController extends CMSController
@@ -64,6 +66,9 @@ class PageController extends CMSController
 
         Event::dispatch('cms.pages.create.after', $page);
 
+        // clean cache
+        Cache::tags([ApiCacheKey::API_SHOP_CMS])->flush();
+
         return response([
             'data'    => new PageResource($page),
             'message' => trans('Apis::app.admin.cms.create-success'),
@@ -100,6 +105,9 @@ class PageController extends CMSController
 
         Event::dispatch('cms.pages.update.after', $page);
 
+        // clean cache
+        Cache::tags([ApiCacheKey::API_SHOP_CMS])->flush();
+
         return response([
             'data'    => new PageResource($page),
             'message' => trans('Apis::app.admin.cms.update-success'),
@@ -118,6 +126,9 @@ class PageController extends CMSController
         $this->getRepositoryInstance()->delete($id);
 
         Event::dispatch('cms.pages.delete.after', $id);
+
+        // clean cache
+        Cache::tags([ApiCacheKey::API_SHOP_CMS])->flush();
 
         return response([
             'message' => trans('Apis::app.admin.cms.mass-operations.delete-success'),
@@ -140,6 +151,9 @@ class PageController extends CMSController
 
             Event::dispatch('cms.pages.delete.after', $index);
         }
+
+        // clean cache
+        Cache::tags([ApiCacheKey::API_SHOP_CMS])->flush();
 
         return response([
             'message' => trans('Apis::app.admin.cms.mass-operations.delete-success'),
