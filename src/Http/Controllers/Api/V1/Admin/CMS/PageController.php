@@ -39,10 +39,10 @@ class PageController extends CMSController
         $request->validate([
             'url_key'      => [
                 'required',
-                // 'unique:cms_page_translations,url_key,locale',
-                Rule::unique('cms_page_translations')->where(function ($query) use($locale, $request) {
-                    return $query->where('url_key', $request->input('url_key'))->where('locale', $locale);
-                }),
+                'unique:cms_page_translations,url_key',
+                // Rule::unique('cms_page_translations')->where(function ($query) use($locale, $request) {
+                //     return $query->where('url_key', $request->input('url_key'))->where('locale', $locale);
+                // }),
                 new \Webkul\Core\Rules\Slug
             ],
             'page_title'   => 'required',
