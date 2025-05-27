@@ -195,7 +195,7 @@ class ProductController extends CatalogController
 
 
 
-                foreach ($attribute['values'] as $option) {
+                foreach ($attribute['values'] as $sortOrder => $option) {
 
                     if(!$option) continue;
 
@@ -206,9 +206,13 @@ class ProductController extends CatalogController
                     if(!$attributeOption){
                         $attributeOption = $attributeOptionRepository->create([
                             'admin_name' => $option,
-                            'sort_order' => $attribute['position'],
+                            'sort_order' => $sortOrder,
                             'attribute_id' => $attributeRepos->id
                         ]);
+                    } else {
+                        $attributeOptionRepository->update([
+                            'sort_order' => $sortOrder
+                        ], $attributeOption->id);
                     }
                     $attributeOptionArray[$attributeOption->id] = $attributeOption->id;
                 }

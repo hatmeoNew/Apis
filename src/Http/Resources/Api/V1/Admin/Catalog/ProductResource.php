@@ -44,6 +44,7 @@ class ProductResource extends JsonResource
                             'admin_name' => $option->admin_name,
                             'label' => $option->label,
                             'swatch_value' => $option->swatch_value,
+                            'sort_order' => $option->sort_order,
                         ];
                     }),
                 ];
