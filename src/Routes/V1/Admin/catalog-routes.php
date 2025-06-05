@@ -33,6 +33,10 @@ Route::group([
         Route::post('mass-destroy', 'massDestroy');
 
         Route::post('quick-create', 'quickCreate');
+
+        Route::post('add-products', 'addProducts');
+
+        Route::post('remove-products', 'removeProducts');
     });
 
     /**
@@ -87,12 +91,12 @@ Route::group([
     });
 
     /**
-     * 
+     *
      * offer routes.
-     * 
+     *
      */
     Route::controller(OfferController::class)->prefix('offers')->group(function () {
-        
+
         // clear cache
         Route::post('clear-cache/{slug}', 'clearCache');
 

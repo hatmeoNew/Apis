@@ -6,12 +6,12 @@ use Illuminate\Support\Facades\Event;
 use Nicelizhi\Manage\Http\Requests\CategoryRequest;
 use Nicelizhi\Manage\Http\Requests\MassDestroyRequest;
 use Nicelizhi\Manage\Http\Requests\MassUpdateRequest;
+use Nicelizhi\Manage\Http\Requests\CategoryProductAttachRequest;
 use Webkul\Category\Repositories\CategoryRepository;
 use Webkul\Core\Models\Channel;
 use NexaMerchant\Apis\Http\Resources\Api\V1\Admin\Catalog\CategoryResource;
 use Illuminate\Support\Facades\Cache;
 use NexaMerchant\Apis\Enum\ApiCacheKey;
-
 
 class CategoryController extends CatalogController
 {
@@ -245,5 +245,51 @@ class CategoryController extends CatalogController
     private function containsNonDeletableCategory($categories)
     {
         return $categories->contains(fn ($category) => ! $this->isCategoryDeletable($category));
+    }
+
+    /**
+     * Add products to the category.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addProducts(CategoryProductAttachRequest $request)
+    {
+        $category = $this->getRepositoryInstance()->findOrFail(
+            $request->input('category_id')
+        );
+
+        $category->products()->syncWithoutDetaching($request->input('product_ids'));
+
+        // clear cache
+        Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
+        Cache::tags([ApiCacheKey::API_ADMIN_CATEGORY])->flush();
+
+        return response([
+            'data'    => new CategoryResource($category),
+            'message' => trans('Apis::app.admin.catalog.categories.add-products-success'),
+        ]);
+    }
+
+    /**
+     * Remove products from the category.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function removeProducts(CategoryProductAttachRequest $request)
+    {
+        $category = $this->getRepositoryInstance()->findOrFail(
+            $request->input('category_id')
+        );
+
+        $category->products()->detach($request->input('product_ids'));
+
+        // clear cache
+        Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
+        Cache::tags([ApiCacheKey::API_ADMIN_CATEGORY])->flush();
+
+        return response([
+            'data'    => new CategoryResource($category),
+            'message' => trans('Apis::app.admin.catalog.categories.remove-products-success'),
+        ]);
     }
 }
