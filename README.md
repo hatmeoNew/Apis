@@ -4,7 +4,7 @@
 
 [![Build Status](https://github.com/hatmeoNew/Apis/workflows/Laravel/badge.svg)](https://github.com/hatmeoNew/apis)
 [![Release](https://img.shields.io/github/release/hatmeoNew/apis.svg?style=flat-square)](https://github.com/hatmeoNew/apis/releases)
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/hatmeoNew/apis.svg?style=flat-square)](https://packagist.org/packages/hatmeoNew/apis)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/hatmeo/apis.svg?style=flat-square)](https://packagist.org/packages/hatmeo/apis)
 [![Total Downloads](https://img.shields.io/packagist/dt/hatmeoNew/apis.svg?style=flat-square)](https://packagist.org/packages/hatmeoNew/apis)
 
 
