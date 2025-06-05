@@ -109,13 +109,15 @@ class CategoryController extends CatalogController
         ]), $id);
 
 
-      
+
 
         Event::dispatch('catalog.category.update.after', $category);
 
         // clear cache
         Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
         Cache::tags([ApiCacheKey::API_ADMIN_CATEGORY])->flush();
+        Cache::tags([ApiCacheKey::API_SHOP_CMS])->flush();
+        Cache::tags([ApiCacheKey::API_SHOP])->flush();
 
         return response([
             'data'    => new CategoryResource($category),
