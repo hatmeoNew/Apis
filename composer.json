@@ -1,5 +1,5 @@
 {
-    "name": "nexa-merchant/apis",
+    "name": "hatmeo/apis",
     "license": "MIT",
     "description" : "Nexa merchant Apps api",
     "keywords": ["laravel", "api", "jwt", "nexa merchant", "merchant", "restful", "restful api"],
