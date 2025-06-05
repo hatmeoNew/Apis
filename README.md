@@ -1,11 +1,11 @@
-# NexaMerchant/Apis
+# hatmeoNew/Apis
 
 > NexaMerchant is a apps store for NexaMerchant Platform, NexaMerchant is a free merchant software,you can use it build for ecommence, blog, cms, erp etc
 
-[![Build Status](https://github.com/NexaMerchant/apis/workflows/Laravel/badge.svg)](https://github.com/NexaMerchant/apis)
-[![Release](https://img.shields.io/github/release/NexaMerchant/apis.svg?style=flat-square)](https://github.com/NexaMerchant/apis/releases)
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/Nexa-Merchant/apis.svg?style=flat-square)](https://packagist.org/packages/Nexa-Merchant/apis)
-[![Total Downloads](https://img.shields.io/packagist/dt/Nexa-Merchant/apis.svg?style=flat-square)](https://packagist.org/packages/Nexa-Merchant/apis)
+[![Build Status](https://github.com/hatmeoNew/apis/workflows/Laravel/badge.svg)](https://github.com/hatmeoNew/apis)
+[![Release](https://img.shields.io/github/release/hatmeoNew/apis.svg?style=flat-square)](https://github.com/hatmeoNew/apis/releases)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/hatmeoNew/apis.svg?style=flat-square)](https://packagist.org/packages/hatmeoNew/apis)
+[![Total Downloads](https://img.shields.io/packagist/dt/hatmeoNew/apis.svg?style=flat-square)](https://packagist.org/packages/hatmeoNew/apis)
 
 
 # Requirements
@@ -23,7 +23,7 @@ Add it to config/app.php $providers
 # How to Publish
 
 ```
-composer require nexa-merchant/apis
+composer require hatmeo/apis
 ```
 
 # How to Install
