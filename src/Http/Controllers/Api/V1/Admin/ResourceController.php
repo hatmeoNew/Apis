@@ -44,14 +44,14 @@ class ResourceController extends V1Controller implements ResourceContract
             foreach ($filterable as $input => $value) {
                 $relations = explode('-', $input);
                 $fieldWithOperator = array_pop($relations);
-    
+
                 if (strpos($fieldWithOperator, '__') !== false) {
                     [$field, $operator] = explode('__', $fieldWithOperator);
                 } else {
                     $field = $fieldWithOperator;
                     $operator = 'eq';
                 }
-    
+
                 $operatorMap = [
                     'eq' => '=',
                     'neq' => '<>',
@@ -61,18 +61,32 @@ class ResourceController extends V1Controller implements ResourceContract
                     'lte' => '<=',
                     'like' => 'like',
                 ];
-    
+
                 $operator = $operatorMap[$operator] ?? '=';
-    
+
                 if (!empty($relations)) {
                     $relation = implode('.', $relations);
-    
-                    $query = $query->whereHas($relation, function ($q) use ($field, $operator, $value) {
-                        if ($operator === 'like') {
-                            $value = "%{$value}%";
-                        }
-                        $q->where($field, $operator, $value);
-                    });
+
+                    if ($operator === '<>') {
+                        // 处理 "不在某个分类中" 的逻辑
+                        $query = $query->where(function ($q) use ($relation, $field, $value) {
+                            // 条件1：产品没有任何分类
+                            $q->doesntHave($relation);
+
+                            // 条件2：产品有分类，但不包含指定分类
+                            $q->orWhereDoesntHave($relation, function ($subQuery) use ($field, $value) {
+                                $subQuery->where($field, '=', $value);
+                            });
+                        });
+                    } else {
+                        $query = $query->whereHas($relation, function ($q) use ($field, $operator, $value) {
+                            if ($operator === 'like') {
+                                $value = "%{$value}%";
+                            }
+                            $q->where($field, $operator, $value);
+                        });
+                    }
+
                 } else {
                     if ($operator === 'like') {
                         $value = "%{$value}%";
