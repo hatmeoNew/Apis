@@ -264,6 +264,9 @@ class CategoryController extends CatalogController
         Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
         Cache::tags([ApiCacheKey::API_ADMIN_CATEGORY])->flush();
 
+        Cache::tags([ApiCacheKey::API_SHOP_CMS])->flush();
+        Cache::tags([ApiCacheKey::API_ADMIN])->flush();
+
         return response([
             'data'    => new CategoryResource($category),
             'message' => trans('Apis::app.admin.catalog.categories.add-products-success'),
@@ -286,6 +289,9 @@ class CategoryController extends CatalogController
         // clear cache
         Cache::tags([ApiCacheKey::API_SHOP_CATEGORY])->flush();
         Cache::tags([ApiCacheKey::API_ADMIN_CATEGORY])->flush();
+
+        Cache::tags([ApiCacheKey::API_SHOP_CMS])->flush();
+        Cache::tags([ApiCacheKey::API_ADMIN])->flush();
 
         return response([
             'data'    => new CategoryResource($category),
