@@ -34,9 +34,6 @@ Route::group([
 
         Route::post('quick-create', 'quickCreate');
 
-        Route::post('add-products', 'addProducts');
-
-        Route::post('remove-products', 'removeProducts');
     });
 
     /**
@@ -56,6 +53,10 @@ Route::group([
         Route::post('mass-update', 'massUpdate');
 
         Route::post('mass-destroy', 'massDestroy');
+
+        Route::post('add-products', 'addProducts');
+
+        Route::post('remove-products', 'removeProducts');
     });
 
     /**
