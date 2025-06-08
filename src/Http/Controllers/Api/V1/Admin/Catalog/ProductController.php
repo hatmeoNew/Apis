@@ -375,6 +375,7 @@ class ProductController extends CatalogController
             $tableData['name'] = $req['name'];
             $tableData['new'] = 1;
             $tableData['sku'] = $req['sku'];
+            $tableData['custom_sku'] = $req['custom_sku'] ?? '';
             $tableData['guest_checkout'] = 1;
             $tableData['status'] = $req['status'];
             $tableData['description'] = $req['description'];
