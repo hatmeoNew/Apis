@@ -42,6 +42,8 @@ Route::group([
         Route::post('mass-update', 'massUpdate');
 
         Route::post('import', 'import'); // add import method
+
+        Route::post('batch-add', 'batchAdd');
     });
 
     /**

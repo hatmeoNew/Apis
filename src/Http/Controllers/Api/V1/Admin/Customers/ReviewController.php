@@ -13,6 +13,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
 use NexaMerchant\Apis\Enum\ApiCacheKey;
 use Webkul\Product\Models\Product;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Webkul\Product\Models\ProductReview;
 
 class ReviewController extends BaseController
 {
@@ -203,5 +206,102 @@ class ReviewController extends BaseController
             ], 500);
         }
 
+    }
+
+    /**
+     * @description: batch Add customers
+     * @param {Request} $request
+     * @return {*}
+     * @Author: rickon
+     * @Date: 2025-06-11 14:23:14
+     */
+    public function batchAdd(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $errors = [];
+            foreach ($data as $rowIndex => $row) {
+                // 验证数据
+                $validator = Validator::make($row, [
+                    // product_id是否存在
+                    'product_id'     => 'required|integer|exists:products,id',
+                    'customer_name'  => 'required|string',
+                    'customer_email' => 'required|email',
+                    'title'          => 'required|string',
+                    'rating'         => 'required|integer|min:1|max:5',
+                    'comment'        => 'nullable|string',
+                    'images'         => 'nullable|array',
+                ]);
+                if ($validator->fails()) {
+                    $errors[$rowIndex] = $validator->errors();
+                }
+            }
+
+            if (count($errors) > 0) {
+                return response()->json([
+                    'status'  => false,
+                    'errors'  => $errors,
+                ], 422);
+            }
+
+            foreach ($data as $rowIndex => $row) {
+                $product = Product::where('id', $row['product_id'])->first();
+                if (empty($product)) {
+                    continue;
+                }
+
+                $customer = DB::table('customers')->where('email', $row['customer_email'])->first();
+                if(!$customer) {
+                    // create a new customer
+                    DB::table('customers')->insertGetId([
+                        'first_name'  => $row['customer_name'],
+                        'last_name'   => $row['customer_name'],
+                        'email'       => $row['customer_email'],
+                        'password'    => bcrypt('password'),
+                        'is_verified' => 1,
+                        'created_at'  => now(),
+                        'updated_at'  => now(),
+                    ]);
+
+                    $customer = DB::table('customers')->where('email', $row['customer_email'])->first();
+                }
+
+                $productReview = new ProductReview([
+                    'product_id'  => $product->id,
+                    'customer_id' => $customer->id,
+                    'name'        => $row['customer_name'],
+                    'title'       => $row['title'],
+                    'rating'      => $row['rating'],
+                    'comment'     => $row['comment'] ?? '',
+                    'sort'        => isset($row['sort']) ? $row['sort'] : 0,
+                    'status'      => 'pending',
+                    'sort'        => 0,
+                ]);
+
+                $productReview->save();
+
+                if (!empty($row['images'])) {
+                    foreach ($row['images'] as $image) {
+                        $productReview->images()->create([
+                            'path' => $image,
+                            'type' => 'image',
+                            'mime_type' => 'jpeg',
+                        ]);
+                    }
+                }
+            }
+
+            Cache::tags(ApiCacheKey::API_SHOP_PRODUCTS_COMMENTS)->flush();
+
+            return response()->json([
+                'message' => 'Product reviews batch Add successfully.',
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred during import.',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
     }
 }
