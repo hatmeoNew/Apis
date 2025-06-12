@@ -61,7 +61,7 @@ class CartController extends CustomerController
     }
 
     /**
-     * 
+     *
      * Batch Store items to the cart.
      */
     public function batchStore($productId, Request $request): JsonResponse
@@ -309,7 +309,7 @@ class CartController extends CustomerController
      * @return \Illuminate\Http\Response
      */
     public function removeCoupon(Request $request)
-    {   
+    {
         $cart_id = $request->input("cart_id");
         if($cart_id) {
             $cart = $this->cartRepository->find($cart_id);
@@ -368,6 +368,7 @@ class CartController extends CustomerController
             return response()->json(['error' => 'You Have already placed order, if you want to place another order please confirm your order','code'=>'202'], 400);
         }
         $refer = isset($input['refer']) ? trim($input['refer']) : "";
+        $shippingMethod = isset($input['shippingMethod']) ? trim($input['shippingMethod']) : "flatrate_flatrate";
 
         $products = $request->input("products");
         Log::info("products". json_encode($products));
@@ -413,8 +414,8 @@ class CartController extends CustomerController
 
         Cart::saveCustomerAddress($addressData);
 
-        $shippingMethod = "free_free"; // 包邮
-        $shippingMethod = "flatrate_flatrate";
+        // $shippingMethod = "free_free"; // 包邮
+        // $shippingMethod = "flatrate_flatrate";
         // Cart::saveShippingMethod($shippingMethod);
 
         Cart::saveShippingMethod($shippingMethod);
@@ -461,15 +462,15 @@ class CartController extends CustomerController
             }
 
             if(!empty($cartId)) {
-                
+
                 $cart = $this->cartRepository->find($cartId);
                 Cart::setCart($cart);
-                
+
             }
 
             $refer = $request->input("refer");
 
-        
+
             $params = request()->input("params");
             if(!empty($params)) {
 
@@ -486,7 +487,7 @@ class CartController extends CustomerController
                 $addressData['billing']['phone'] = $params['phone_full'];
                 $addressData['billing']['phone'] = $params['phone_full'];
                 $addressData['billing']['address1'] = $address1;
-                
+
                 $addressData['billing']['state'] = $params['province'];
                 $addressData['billing']['postcode'] = $params['code'];
 
@@ -502,7 +503,7 @@ class CartController extends CustomerController
                 if(!isset($addressData['shipping']['email'])) {
                     $addressData['shipping'] = $addressData['billing'];
                 }
-                
+
 
                 Log::error("paypal pay address ".$refer.'--'.json_encode($addressData));
 
@@ -522,9 +523,9 @@ class CartController extends CustomerController
                     $this->smartButton->captureOrder(request()->input('orderData.orderID'));
                 }
                 //$this->smartButton->captureOrder(request()->input('orderData.orderID'));
-    
+
                 //$this->smartButton->AuthorizeOrder(request()->input('orderData.orderID'));
-    
+
                 //$request->session()->put('last_order_id', request()->input('orderData.orderID'));
 
             }else{
@@ -578,11 +579,11 @@ class CartController extends CustomerController
                         'data'     => route('shop.checkout.cart.index'),
                     ]);
                 }
-    
+
                 if($order['result']->status != "COMPLETED") {
                     $this->smartButton->captureOrder(request()->input('orderData.orderID'));
                 }
-    
+
 
             }
 
@@ -841,6 +842,7 @@ class CartController extends CustomerController
         $payment_method_input = $request->input('payment_method');
         $refer = isset($input['refer']) ? trim($input['refer']) : "";
         $cart_id = isset($input['cart_id']) ? trim($input['cart_id']) : "";
+        $shippingMethod = isset($input['shippingMethod']) ? trim($input['shippingMethod']) : "flatrate_flatrate";
         if($cart_id) {
             $cart = $this->cartRepository->find($cart_id);
             Cart::setCart($cart);
@@ -928,8 +930,8 @@ class CartController extends CustomerController
 
 
         //
-        $shippingMethod = "free_free"; // free shipping
-        $shippingMethod = "flatrate_flatrate";
+        // $shippingMethod = "free_free"; // free shipping
+        // $shippingMethod = "flatrate_flatrate";
 
         if (
             Cart::hasError()
@@ -970,7 +972,7 @@ class CartController extends CustomerController
                 ], Response::HTTP_FORBIDDEN);
             }
 
-            
+
             Cart::collectTotals();
             $this->validateOrder();
             $cart = Cart::getCart();
