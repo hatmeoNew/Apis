@@ -3,7 +3,6 @@
 namespace NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Email;
 
 use Illuminate\Http\Request;
-use Webkul\Core\Models\Country;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\AdminController;
 use Nicelizhi\Shopify\Models\EmailSendRecords;
 
@@ -11,7 +10,7 @@ class EmailSendRecordsController extends AdminController
 {
     public function index(Request $request)
     {
-        $query = Country::query();
+        $query = EmailSendRecords::query();
 
         if ($search = $request->input('code')) {
             $query->where(function ($q) use ($search) {
@@ -39,20 +38,20 @@ class EmailSendRecordsController extends AdminController
             'name' => 'required',
         ]);
 
-        $country = Country::create($validated);
+        $country = EmailSendRecords::create($validated);
         return response()->json($country, 200);
     }
 
     public function update(Request $request, $id)
     {
-        $country = Country::findOrFail($id);
+        $country = EmailSendRecords::findOrFail($id);
         $country->update($request->all());
         return response()->json($country);
     }
 
     public function destroy($id)
     {
-        Country::destroy($id);
+        EmailSendRecords::destroy($id);
         return response()->json(['message' => 'Country deleted successfully.']);
     }
 

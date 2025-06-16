@@ -62,4 +62,6 @@ Route::group([
     require 'template-routes.php';
 
     require 'country-routes.php';
+
+    require 'email-routes.php';
 });
