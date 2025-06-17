@@ -78,14 +78,6 @@ class EmailSendRecordsController extends AdminController
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            if ($records->isEmpty()) {
-                return response()->json([
-                    'code' => 404,
-                    'message' => '未找到该订单的邮件记录',
-                    'data' => []
-                ], 404);
-            }
-
             return response()->json([
                 'code' => 200,
                 'message' => '查询成功',
