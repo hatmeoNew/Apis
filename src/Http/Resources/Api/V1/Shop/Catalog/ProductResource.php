@@ -54,7 +54,7 @@ class ProductResource extends JsonResource
         $sell_points = $redis->hgetall($sell_points_key);
 
 
-        
+
 
         /* generating resource */
         return [
@@ -64,6 +64,9 @@ class ProductResource extends JsonResource
             'type'               => $product->type,
             'name'               => $product->name,
             'url_key'            => $product->url_key,
+            'meta_title'         => $product->meta_title,
+            'meta_keywords'      => $product->meta_keywords,
+            'meta_description'   => $product->meta_description,
             'price'              => core()->convertPrice($productTypeInstance->getMinimalPrice()),
             'compare_at_price'   => isset($product->compare_at_price) ? core()->convertPrice($product->compare_at_price) : null,
             'formatted_price'    => core()->currency($productTypeInstance->getMinimalPrice()),
@@ -108,7 +111,7 @@ class ProductResource extends JsonResource
                 'super_attributes' => AttributeResource::collection($product->super_attributes),
             ]),
 
-            
+
         ];
     }
 
