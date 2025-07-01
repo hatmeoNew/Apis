@@ -5,6 +5,7 @@ use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Sales\InvoiceController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Sales\OrderController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Sales\RefundController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Sales\ShipmentController;
+use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Sales\OrderUtmController;
 use NexaMerchant\Apis\Http\Controllers\Api\V1\Admin\Sales\TransactionController;
 
 Route::group([
@@ -40,6 +41,16 @@ Route::group([
         Route::get('{id}', 'getResource');
 
         Route::post('{order_id}', 'store');
+
+    });
+
+    /**
+     * OrderUtm routes.
+     */
+    Route::controller(OrderUtmController::class)->prefix('order-utm')->group(function () {
+        Route::get('', 'allResources')->middleware('admin.cache.response:120');
+
+        Route::get('{id}', 'getResource');
 
     });
 
