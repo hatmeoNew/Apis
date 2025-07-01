@@ -111,6 +111,7 @@ class OrderResource extends JsonResource
             'dispute'                             => $this->dispute,
             'updated_at'                          => $this->updated_at,
             'created_at'                          => $this->created_at,
+            'order_utm'                           => new OrderUtmResource($this->orderUtm),
         ];
     }
 }

@@ -42,4 +42,9 @@ class OrderUtm extends Model {
         'utmcsr' => 'string',
         'utmccn' => 'string',
     ];
+
+    public function order()
+    {
+        return $this->belongsTo(\Webkul\Sales\Models\Order::class, 'order_id');
+    }
 }
